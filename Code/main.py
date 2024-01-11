@@ -25,6 +25,7 @@ def help():
         'add <name_contact> <phone> <birthday>'               - Add a new contact with an optional birthday.
         'add <name_contact> <another_phone>'                  - Add an additional phone number to an existing contact.
         'birthday <name_contact> <new_birthday_date>'         - Add or update the birthday of an existing contact.
+        'by birthday <days from today>                        - Search for contacts in this range
         'change phone <name_contact> <old_phone> <new_phone>' - Change an existing phone number of a contact.
         'search'                                              - Search for contacts by name or phone number that match the entered string.
         'when <name_contact>'                                 - Show the number of days until the birthday for a contact.
@@ -201,6 +202,17 @@ def update_birthday(command):
         raise ValueError("Invalid command format. Please enter old_birthday name new_birthday.")
 
 @input_error
+def search_contact_by_birthday(request):
+    address = address_book.search_by_birthday(request)
+    if len(address) == 0:
+        return '\nContacts not find in this range!'
+    result = ''
+    for i in address:
+        phones_info = ', '.join(phone.value for phone in i.phones)
+        result += f"{i.name.value}:\n  Phone numbers: {phones_info}\n  Birthday: {i.birthday}\n"
+    return result
+
+@input_error
 def remove_phone_from_contact(command):
     parts = command.split(" ")
     if len(parts) == 2:
@@ -243,6 +255,7 @@ commands = {
     "finde": get_phone,
     "when": when_birthday,
     "birthday ": update_birthday,
+    "by birthday": search_contact_by_birthday,
     "remove": remove_phone_from_contact,
     "delete": delete_contact,
     "show all": show_all_contacts,
