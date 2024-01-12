@@ -305,6 +305,7 @@ commands = {
     "sort": sort_folder,    
     "help": help,
     "hello": hello,
+    "by birthday": search_contact_by_birthday,
     "change phone": change_contact,
     "delete": delete_contact,
     "save": save_to_disk,
@@ -323,7 +324,6 @@ commands = {
 
     "finde phone": get_phone,
     "when birthday": when_birthday,
-    "by birthday": search_contact_by_birthday,
     "birthday add": update_birthday,
     "search": search_contacts,
     
