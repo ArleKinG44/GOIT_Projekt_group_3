@@ -131,6 +131,7 @@ class Record:
 
         if self.birthday is not None and self.birthday.value is not None:
             birth_day = self.birthday.value
+            birth_day = [birth_day.replace(i, '-') for i in './- ' if i in birth_day][0]
             birth_day = datetime.strptime(birth_day, "%d-%m-%Y")
 
             next_birthday = datetime(today.year, birth_day.month, birth_day.day)
@@ -248,6 +249,13 @@ class AddressBook(UserDict):
                 results.append(record)
 
         return results
+
+    def search_by_birthday(self, number_of_days):
+        self._contact = []
+        for i in self.data.values():
+            self._birth_date = i.days_to_birthday()
+            if int(number_of_days) >= self._birth_date:
+                self._contact.append(i)
+
+        return self._contact
 ###############################################
-    
-    
