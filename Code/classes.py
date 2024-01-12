@@ -254,7 +254,7 @@ class AddressBook(UserDict):
         self._contact = []
         for i in self.data.values():
             self._birth_date = i.days_to_birthday()
-            if int(number_of_days) >= self._birth_date:
+            if int(number_of_days) > self._birth_date:
                 self._contact.append(i)
 
         return self._contact
