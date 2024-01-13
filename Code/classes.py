@@ -209,6 +209,12 @@ class Record:
                 return f'Number phone {phone_old} has been changed to {tel_new.value}'
         raise ValueError("Phone number not found for changing")
 
+
+    def edit_name(self, name_new):
+        self.name.value = name_new
+        return f'Name has been changed to {name_new}'
+        
+    
     def remove_email(self, email):
         tel = Email(email)
         if tel.value in [item.value for item in self.emails]:
@@ -321,7 +327,6 @@ class AddressBook(UserDict):
         else:
             return 'Removal canceled'
 
-
     def delete(self, name):
         if name in self.data:
             del self.data[name]
@@ -346,8 +351,6 @@ class AddressBook(UserDict):
             print(f"Error saving data to '{filename}': {str(e)}")
 
     def load_from_disk(self, filename):
-        while not filename.strip():
-            filename = input("Enter a valid filename: ").strip()
         try:
             with open(filename, 'rb+') as file:
                 print(f"\nReading data from {filename}")

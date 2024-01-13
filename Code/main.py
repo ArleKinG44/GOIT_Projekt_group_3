@@ -28,9 +28,11 @@ def help():
     return """Please enter the command in accordance with the described capabilities (left column), for the specified type (right column).\n
     Here are some things you can do:\n
         'add                                                    - Add a new contact with an optional birthday.
+        'add phone <name_contact> <another_phone>'              - Add a new phone to an existing contact.
         'add <name_contact> <another_phone>'                    - Add an additional phone number to an existing contact.
         'birthday add <name_contact> <new_birthday_date>'       - Add or update the birthday of an existing contact.
         'change phone <name_contact> <old_phone> <new_phone>'   - Change an existing phone number of a contact.
+        'change name <name_contacte> <new_name>'                - Change an existing name.
         'search'                                                - Search for contacts by name or phone number that match the entered string.
         'when <name_contact>'                                   - Show the number of days until the birthday for a contact.
         'finde phone <name_contact>'                            - Show all phone numbers for a contact.
@@ -55,6 +57,7 @@ def add_contact_interactive():
     name = input("Enter the contact's name: ").strip()
     record = Record(name)
     added_info = []
+
 
     while True:
         phone = input("Enter a phone number (or nothing to finish): ").strip()
@@ -117,6 +120,22 @@ def change_phone(command):
         raise ValueError("Invalid command format. Please enter name old phone and new phone.")
 
 @input_error
+def change_name(command):
+    print(command)
+    parts = command.split(" ")
+    if len(parts) == 2:
+        old_name, new_name = parts[0], parts[1]
+        record = address_book.find(old_name)
+        if record:
+            new_name_field = Name(new_name)
+            result = record.edit_name(new_name_field.value)
+            return result
+        else:
+            raise KeyError(f"Contact {old_name} not found")
+    else:
+        raise ValueError("Invalid command format. Please enter old name and new name")
+    
+@input_error
 def get_phone(command):
     parts = command.split(" ")
     if len(parts) == 1:
@@ -161,12 +180,12 @@ def unknown_command():
     return f"Unknown command: Type 'help' for available commands."
 
 @input_error
-def save_to_disk():
+def save_to_disk(filename):
     address_book.save_to_disk(filename)
     return f"Address book saved to {filename}"
 
 @input_error
-def load_from_disk():
+def load_from_disk(filename):
     address_book.load_from_disk(filename)
     return f"Address book loaded from {filename}"
 
@@ -275,6 +294,21 @@ def add_email(command):
     else:
         raise ValueError("Invalid command format. Please enter name and email.")
 
+@input_error
+def add_phone(command):
+    parts = command.split(" ")
+    if len(parts) == 2:
+        name, phone = parts[0], parts[1]
+        record = address_book.find(name)
+        if record:
+            phone_field = Phone(phone)
+            record.add_phone(phone_field.value)
+            return f"Phone {phone} added to contact {name}."
+        else:
+            raise KeyError(f"Contact {name} not found")
+    else:
+        raise ValueError("Invalid command format. Please enter name and phone.")
+    
 @input_error
 def search_contact_by_birthday(request):
     address = address_book.search_by_birthday(request)
@@ -476,12 +510,12 @@ commands = {
     "hello": hello,
     "help": help,
     "add contact": add_contact_interactive,
-    #"add phone": ,
+    "add phone": add_phone,
     "add email": add_email,
     "add adres": add_address,
     "change phone": change_phone,
     "change birthday": update_birthday,
-    #"change name": ,
+    "change name": change_name,
     "change email": change_email,
     "change address": change_address,
     "remove phone": remove_phone_from_contact,
