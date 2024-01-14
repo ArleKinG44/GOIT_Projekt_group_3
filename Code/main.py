@@ -30,11 +30,11 @@ def help():
         'birthday add <name_contact> <new_birthday_date>'       - Add or update the birthday of an existing contact.
         'change phone <name_contact> <old_phone> <new_phone>'   - Change an existing phone number of a contact.
         'search'                                                - Search for contacts by name or phone number that match the entered string.
-        'when <name_contact>'                                   - Show the number of days until the birthday for a contact.
+        'day to birthday'                                       - Show the number of days until the birthday for a contact.
         'finde phone <name_contact>'                            - Show all phone numbers for a contact.
         'show all'                                              - Display all contacts.
         'remove <name_contact> <phone_number>'                  - Remove a phone number from an existing contact.
-        'delete <name_contact>'                                 - Delete an entire contact.
+        'delete contact'                                        - Delete an entire contact.
         'clear all'                                             - Clear all contacts.
         'create note'                                           - Create a new note in the Notebook.
         'change title'                                          - Change the title of an existing note.
@@ -47,8 +47,7 @@ def help():
         'find tags'                                             - Search for notes by tags.
         'sort notes'                                            - Sort notes by tags in alphabetical order.
         'sort folder'                                           - Sorts a folder by different types of files at the specified pathю
-        'exit' or 'close' or 'good bye'                         - Exit the program."""
-
+        'exit' or 'close' or 'good bye' or '.'                  - Exit the program."""
 
 @input_error
 def add_contact_interactive():
@@ -98,31 +97,22 @@ def add_contact_interactive():
     return f"Contact {name} has been added : \n" + "\n".join(added_info)
 
 @input_error
+def get_phone():
+    name = input("Enter the name to get phone numbers: ").strip()
+    if not name:
+        raise ValueError("Name cannot be empty")
+        
+@input_error
 def change_phone():
     name = input("Please enter the contact's name: ").strip()
     old_phone = input("Please enter the old phone number: ").strip()
     new_phone = input("Please enter the new phone number: ").strip()
     record = address_book.find(name)
     if record:
-        new_phone_field = Phone(new_phone)
-        result = record.edit_phone(old_phone, new_phone_field.value)
-        return result
+        phones_info = ', '.join(phone.value for phone in record.phones)
+        return f"Phone numbers for {name}: {phones_info}"
     else:
-        raise KeyError(f"Contact {name} not found")
-
-@input_error
-def get_phone(command):
-    parts = command.split(" ")
-    if len(parts) == 1:
-        name = parts[0]
-        record = address_book.find(name)
-        if record:
-            phones_info = ', '.join(phone.value for phone in record.phones)
-            return f"Phone numbers for {name}: {phones_info}"
-        else:
-            raise KeyError
-    else:
-        raise ValueError
+        raise KeyError(f"No record found for {name}")
 
 
 @input_error
@@ -187,20 +177,17 @@ def search_contacts():
         return result
     else:
         return(f"No results found for '{query}'.")
-
-
+      
+ 
 @input_error
-def when_birthday(command):
-    parts = command.split(" ")
-    if len(parts) == 1:
-        name = parts[0]
-        record = address_book.find(name)
-        if record:
-            return f"Days until birthday for {name}: {record.days_to_birthday()} days."
-        else:
-            raise KeyError
+def when_birthday():
+    name = input("Enter the name to check for birthday: ").strip()
+    record = address_book.find(name)
+    if record:
+        return f"Days until birthday for {name}: {record.days_to_birthday()} days."
     else:
-        raise ValueError
+        raise KeyError(f"No record found for '{name}' in the address book.")
+
 
 @input_error
 def update_birthday():
@@ -219,10 +206,9 @@ def remove_phone_from_contact():
     phone = input("Please enter the phone number to remove: ").strip()
     record = address_book.find(name)
     if record:
-        result = record.remove_phone(phone)
-        return result
+        return f"Days until birthday for {name}: {record.days_to_birthday()} days."
     else:
-        raise KeyError(f"Contact {name} not found")
+        raise KeyError(f"No record found for '{name}' in the address book.")
 
 
 @input_error
@@ -239,22 +225,20 @@ def sort_folder():
 
 
 @input_error
-def delete_contact(command):
-    parts = command.split(" ")
-    if len(parts) == 1:
-        name = parts[0]
-        try:
-            address_book.delete(name)
-            return f"Contact {name} deleted."
-        except KeyError:
-            return f"Contact {name} not found."
-    else:
-        raise ValueError("Invalid command format for deleting a contact.")
+def delete_contact():
+    name = input("Enter the name of the contact you want to delete: ").strip()
+    try:
+        address_book.delete(name)
+        return f"Contact {name} deleted."
+    except KeyError:
+        return f"Contact {name} not found."
     
+
 @input_error
 def add_email():
-    name = input("Please enter the contact's name: ").strip()
-    email = input("Please enter the email: ").strip()
+    name = input("Enter the name of the contact to add email to: ").strip()
+    email = input("Enter the email to add: ").strip()
+
     record = address_book.find(name)
     if record:
         email_field = Email(email)
@@ -264,10 +248,11 @@ def add_email():
         raise KeyError(f"Contact {name} not found")
 
 @input_error
-def search_contact_by_birthday(request):
+def search_contact_by_birthday():
+    request = input("Enter the range for birthday search : ").strip()
     address = address_book.search_by_birthday(request)
     if len(address) == 0:
-        return '\nContacts not find in this range!'
+        return '\nContacts not found in this range!'
     result = ''
     for i in address:
         phones_info = ', '.join(phone.value for phone in i.phones)
@@ -276,15 +261,15 @@ def search_contact_by_birthday(request):
 
 @input_error
 def add_address():
-    name = input("Please enter the contact's name: ").strip()
-    address = input("Please enter the address: ").strip()
+    name = input("Enter the name of the contact to add an address: ").strip()
+    address = input("Enter the address you want to add: ").strip()
     record = address_book.find(name)
     if record:
         address_field = Address(address)
         record.add_address(address_field.value)
-        return f"Address {address} added to contact {name}."
+        return f"Address '{address}' added to contact '{name}'."
     else:
-        raise KeyError(f"Contact {name} not found")
+        raise KeyError(f"Contact '{name}' not found")
 
 @input_error
 def remove_email_from_contact():
@@ -344,9 +329,12 @@ def create_note():
     notebook.add_note(note)    
     return f"Note '{title}' by {author} has been added."
 
+
 @input_error
 def find_note():
     query = input("Enter search query for notes (author, title, or content): ").strip()
+    if not query:
+        return "Please provide a search query."
     results = notebook.find_notes(query)
     if results:
         result = "Found notes:\n"
@@ -356,18 +344,25 @@ def find_note():
     else:
         return "No notes found with the given query."
 
+
 @input_error
 def change_note_title():
     old_title = input("Enter the current title of the note: ").strip()
-    new_title = input("Enter the new title of the note: ").strip()
-    if notebook.update_note_title(old_title, new_title):
+    new_title = input("Enter the new title for the note: ").strip()
+
+    note = notebook.get_note(old_title)
+    if note:
+        notebook.delete_note(old_title)
+        note.title.value = new_title
+        notebook.add_note(note)
         return f"Note title changed from '{old_title}' to '{new_title}'."
     else:
-        return "Note not found or title unchanged."
+        raise KeyError(f"Note '{old_title}' not found")
 
-@input_error
+
+@input_error   
 def edit_note_text():
-    title = input("Enter the title of the note to edit: ").strip()
+    title = input("Enter the title of the note you want to edit: ").strip()
     note = notebook.get_note(title)
     if note:
         new_body = input("Enter the new note text: ").strip()
@@ -376,10 +371,13 @@ def edit_note_text():
     else:
         return "Note not found."
 
+    
 @input_error
 def remove_note():
-    title = input("Enter the title of the note to delete: ").strip()
-    if notebook.delete_note(title):
+    title = input("Enter the title of the note you want to delete: ").strip()
+    note = notebook.get_note(title)
+    if note:
+        notebook.delete_note(title)
         return f"Note '{title}' deleted."
     else:
         return "Note not found."
@@ -457,12 +455,12 @@ commands = {
     #"add phone": ,
     "add email": add_email,
     "add adres": add_address,
-    "change phone": change_phone,
-    "change birthday": update_birthday,
+    # "change phone": change_phone,
+    # "change birthday": update_birthday,
     #"change name": ,
     "change email": change_email,
     "change address": change_address,
-    "remove phone": remove_phone_from_contact,
+    # "remove phone": remove_phone_from_contact,
     "remove email": remove_email_from_contact,
     "remove address": remove_address_from_contact,
     "clear all": address_book.clear_all_contacts,
@@ -470,7 +468,7 @@ commands = {
     "day to birthday": when_birthday,
     "delete contact": delete_contact,
     "search": search_contacts,
-    "finde phone": get_phone,
+    "find phone": get_phone,
     "show all contacts": show_all_contacts,
     "sort folder": sort_folder,
     "create note": create_note,
@@ -510,3 +508,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
