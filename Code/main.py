@@ -37,10 +37,10 @@ def help():
         'delete <name_contact>'                                 - Delete an entire contact.
         'clear all'                                             - Clear all contacts.
         'create note'                                           - Create a new note in the Notebook.
-        'change title <old_title> <new_title>'                  - Change the title of an existing note.
-        'edit note <note_title>'                                - Edit the content of an existing note.
-        'delete note <note_title>'                              - Delete an existing note.
-        'find notes <query>'                                    - Find notes containing the specified query in the title or body or by author.
+        'change title'                                          - Change the title of an existing note.
+        'edit note'                                             - Edit the content of an existing note.
+        'delete note'                                           - Delete an existing note.
+        'find notes'                                            - Find notes containing the specified query in the title or body or by author.
         'show all notes'                                        - Display all notes.
         'add tags'                                              - Adds tags to an existing note.
         'delete tags'                                           - Remove a tag from a note.
@@ -357,45 +357,32 @@ def find_note():
         return "No notes found with the given query."
 
 @input_error
-def change_note_title(command):
-    parts = command.split(" ")
-    if len(parts) == 2:
-        old_title, new_title = parts[0], parts[1]
-        note = notebook.get_note(old_title)
-        if note:
-            notebook.delete_note(old_title)
-            note.title.value = new_title
-            notebook.add_note(note)
-            return f"Note title changed from '{old_title}' to '{new_title}'."
-        else:
-            raise KeyError(f"Note '{old_title}' not found")
+def change_note_title():
+    old_title = input("Enter the current title of the note: ").strip()
+    new_title = input("Enter the new title of the note: ").strip()
+    if notebook.update_note_title(old_title, new_title):
+        return f"Note title changed from '{old_title}' to '{new_title}'."
     else:
-        raise ValueError("Invalid command format. Please enter old and new titles for the note.")
+        return "Note not found or title unchanged."
 
 @input_error
-def edit_note_text(command):
-    title = command.strip()
+def edit_note_text():
+    title = input("Enter the title of the note to edit: ").strip()
     note = notebook.get_note(title)
     if note:
-        print(f"Current note text:\n{note.body}")
-        new_body = input("Enter the new note text (or press Enter to keep the current text): ").strip()
-        if new_body:
-            note.edit_note(new_body)
-            return f"Note '{title}' updated."
-        else:
-            return "Note text not changed."
+        new_body = input("Enter the new note text: ").strip()
+        note.edit_note(new_body)
+        return f"Note '{title}' updated."
     else:
-        raise KeyError(f"Note '{title}' not found")
+        return "Note not found."
 
 @input_error
-def remove_note(command):
-    title = command.strip()
-    note = notebook.get_note(title)
-    if note:
-        notebook.delete_note(title)
+def remove_note():
+    title = input("Enter the title of the note to delete: ").strip()
+    if notebook.delete_note(title):
         return f"Note '{title}' deleted."
     else:
-        raise KeyError(f"Note '{title}' not found")
+        return "Note not found."
     
 @input_error
 def show_all_notes():
@@ -510,7 +497,7 @@ def choice_action(data, commands):
     return unknown_command, None
 
 def main():
-    filename = input("Enter the filename to load/create the address book: : ").strip()
+    filename = input("Enter the filename to load/create the address book: ").strip()
     address_book.load_from_disk(filename, notebook)
     while True:
         data = input("\nEnter command: ").lower().strip()

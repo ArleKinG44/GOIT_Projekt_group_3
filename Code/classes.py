@@ -114,10 +114,7 @@ class Note:
 
     def edit_note_title(self, new_title):
         self.title.value = new_title
-
-    def edit_note_author(self, new_author):
-        self.author.value = new_author
-
+    
     def to_dict(self):
         # Convert the Note instance into a dictionary
         return {
@@ -146,7 +143,6 @@ class Notebook(UserDict):
     def find_notes(self, query):
         query_lower = query.lower()
         return [note for note in self.data.values() if query_lower in note.title.value.lower() or query_lower in note.body.lower() or query_lower in note.author.value.lower()]
-    
 
     def delete_note(self, title):
         if title in self.data:
@@ -154,13 +150,16 @@ class Notebook(UserDict):
             return True
         return False
 
+    def update_note_title(self, old_title, new_title):
+        if old_title in self.data:
+            note = self.data.pop(old_title)
+            note.edit_note_title(new_title)
+            self.data[new_title] = note
+            return True
+        return False
+
     def get_note(self, title):
         return self.data.get(title, None)
-
-    # def show_all_notes(self):
-    #     for note in self.data.values():
-    #         print(f"\nTitle: {note.title.value}\nAuthor: {note.author.value}\nCreated at: {note.created_at.strftime('%Y-%m-%d %H:%M:%S')}")
-    
 
     @staticmethod
     def tag_conversion(tags):
