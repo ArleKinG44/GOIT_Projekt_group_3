@@ -2,8 +2,9 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.lexers import PygmentsLexer
 from pygments.lexers.sql import SqlLexer
-from classes import Field, Name, Phone, Birthday, Email, Address, Title, Note, Notebook, Record, AddressBook
-import sort
+from Code.classes import *
+from Code.sort import main as sort_main
+import random
 import random
 
 address_book = AddressBook()
@@ -228,7 +229,7 @@ def sort_folder():
         source_folder = input("Enter the path of the folder you want to sort: ")
         if not source_folder:
             raise ValueError("Please specify the source folder.")
-        sort.main(source_folder)
+        sort_main(source_folder)
         return "\nThe folder is sorted \N{winking face}\nThank you for using our sorter \N{saluting face}\nHave a nice day \N{smiling face with smiling eyes}"
     except Exception as e:
         print(f"Unexpected Error: {e}")
