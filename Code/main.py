@@ -25,29 +25,40 @@ def hello():
 def help():
     return """Please enter the command in accordance with the described capabilities (left column), for the specified type (right column).\n
     Here are some things you can do:\n
-        'add                                                    - Add a new contact with an optional birthday.
-        'add <name_contact> <another_phone>'                    - Add an additional phone number to an existing contact.
-        'birthday add <name_contact> <new_birthday_date>'       - Add or update the birthday of an existing contact.
-        'change phone <name_contact> <old_phone> <new_phone>'   - Change an existing phone number of a contact.
-        'search'                                                - Search for contacts by name or phone number that match the entered string.
-        'day to birthday'                                       - Show the number of days until the birthday for a contact.
-        'finde phone <name_contact>'                            - Show all phone numbers for a contact.
-        'show all'                                              - Display all contacts.
-        'remove <name_contact> <phone_number>'                  - Remove a phone number from an existing contact.
-        'delete contact'                                        - Delete an entire contact.
-        'clear all'                                             - Clear all contacts.
-        'create note'                                           - Create a new note in the Notebook.
-        'change title'                                          - Change the title of an existing note.
-        'edit note'                                             - Edit the content of an existing note.
-        'delete note'                                           - Delete an existing note.
-        'find notes'                                            - Find notes containing the specified query in the title or body or by author.
-        'show all notes'                                        - Display all notes.
-        'add tags'                                              - Adds tags to an existing note.
-        'delete tags'                                           - Remove a tag from a note.
-        'find tags'                                             - Search for notes by tags.
-        'sort notes'                                            - Sort notes by tags in alphabetical order.
-        'sort folder'                                           - Sorts a folder by different types of files at the specified pathю
-        'exit' or 'close' or 'good bye' or '.'                  - Exit the program."""
+    'hello'                                                 - Be polite with our bot;)
+    'help'                                                  - See available commands and instructions.
+    'add contact'                                           - Add a new contact with an optional phone, email, address or birthday.
+    'add phone'                                             - Add an additional phone number to an existing contact.
+    'add email'                                             - Add an additional email to an existing contact.
+    'add address'                                           - Add an additional address to an existing contact.
+    'change phone'                                          - Change the phone number of an existing contact.
+    'change birthday'                                       - Change or add the birthday of an existing contact.
+    'change name'                                           - Change the name phone of an existing contact.
+    'change email'                                          - Change the email of an existing contact.
+    'change address'                                        - Change the address of an existing contact.
+    'remove phone'                                          - Remove a phone from an existing contact.
+    'remove email'                                          - Remove an email from an existing contact.
+    'remove address'                                        - Remove an address from an existing contact.
+    'clear all'                                             - Clear all contacts.
+    'search by birthday'                                    - Search contact by birthday.
+    'day to birthday'                                       - Show the number of days until the birthday for a contact.
+    'delete contact'                                        - Delete an entire contact.
+    'search'                                                - Search for contacts by name or phone number that match the entered string.
+    'find phone'                                            - Show all phone numbers for an contact.
+    'show all contacts'                                     - Show all existing contacts with phones, emails, addresses, birthday.
+    'sort folder'                                           - Sorts a folder by different types of files at the specified path.
+    'create note'                                           - Create a new note in the Notebook.
+    'change title'                                          - Change the title of an existing note.
+    'add tags'                                              - Adds tags to an existing note.
+    'edit note'                                             - Edit the content of an existing note.
+    'delete note'                                           - Delete an existing note.
+    'find note'                                             - Find notes containing the specified query in the title or body or by author.
+    'show all notes'                                        - Display all notes.
+    'find tags'                                             - Search for notes by tags.
+    'sort notes'                                            - Sort notes by tags in alphabetical order.
+    'delete tags'                                           - Remove a tag from a note.
+    'good bye' or 'close' or 'exit' or '.'                  - Exit the program.
+    """
 
 @input_error
 def add_contact_interactive():
@@ -181,9 +192,9 @@ def when_birthday():
 @input_error
 def update_birthday():
     name = input("Please enter the contact's name: ").strip()
-    new_birthday = input("Please enter the new birthday: ").strip()
     record = address_book.find(name)
     if record:
+        new_birthday = input("Please enter the new birthday: ").strip()
         record.update_birthday(new_birthday)
         return f"Birthday for {name} updated to {new_birthday}."
     else:
@@ -213,9 +224,9 @@ def delete_contact():
 @input_error
 def add_phone():
     name = input("Enter the name of the contact: ").strip()
-    phone = input("Enter the phone number to add: ").strip()
     record = address_book.find(name)
     if record:
+        phone = input("Enter the phone number to add: ").strip()
         phone_field = Phone(phone)
         record.add_phone(phone_field.value)
         return f"Phone {phone} added to contact {name}."
@@ -225,10 +236,9 @@ def add_phone():
 @input_error
 def add_email():
     name = input("Enter the name of the contact to add email to: ").strip()
-    email = input("Enter the email to add: ").strip()
-
     record = address_book.find(name)
     if record:
+        email = input("Enter the email to add: ").strip()
         email_field = Email(email)
         record.add_email(email_field.value)
         return f"Email {email} added to contact {name}."
@@ -250,9 +260,9 @@ def search_contact_by_birthday():
 @input_error
 def add_address():
     name = input("Enter the name of the contact to add an address: ").strip()
-    address = input("Enter the address you want to add: ").strip()
     record = address_book.find(name)
     if record:
+        address = input("Enter the address you want to add: ").strip()
         address_field = Address(address)
         record.add_address(address_field.value)
         return f"Address '{address}' added to contact '{name}'."
@@ -262,9 +272,9 @@ def add_address():
 @input_error
 def remove_phone_from_contact():
     name = input("Please enter the contact's name: ").strip()
-    phone = input("Please enter the phone number to remove: ").strip()
     record = address_book.find(name)
     if record:
+        phone = input("Please enter the phone number to remove: ").strip()
         result = record.remove_phone(phone)
         return result
     else:
@@ -273,9 +283,9 @@ def remove_phone_from_contact():
 @input_error
 def remove_email_from_contact():
     name = input("Please enter the contact's name: ").strip()
-    email = input("Please enter the email to remove: ").strip()
     record = address_book.find(name)
     if record:
+        email = input("Please enter the email to remove: ").strip()
         result = record.remove_email(email)
         return result
     else:
@@ -284,21 +294,34 @@ def remove_email_from_contact():
 @input_error
 def remove_address_from_contact():
     name = input("Please enter the contact's name: ").strip()
-    address = input("Please enter the address to remove: ").strip()
     record = address_book.find(name)
     if record:
+        address = input("Please enter the address to remove: ").strip()
         result = record.remove_address(address)
         return result
     else:
         raise KeyError(f"Contact {name} not found")
 
 @input_error
-def change_phone():
+def change_name():
     name = input("Please enter the contact's name: ").strip()
-    old_phone = input("Please enter the old phone number: ").strip()
-    new_phone = input("Please enter the new phone number: ").strip()
     record = address_book.find(name)
     if record:
+        new_name = input("Please enter the new name: ").strip()
+        new_name_field = Name(new_name)
+        result = record.edit_name(new_name_field.value)
+        return result
+    else:
+        raise KeyError(f"Contact {name} not found")
+    
+
+@input_error
+def change_phone():
+    name = input("Please enter the contact's name: ").strip()
+    record = address_book.find(name)
+    if record:
+        old_phone = input("Please enter the old phone number: ").strip()
+        new_phone = input("Please enter the new phone number: ").strip()
         new_phone_field = Phone(new_phone)
         result = record.edit_phone(old_phone, new_phone_field.value)
         return result
@@ -308,10 +331,10 @@ def change_phone():
 @input_error
 def change_email():
     name = input("Please enter the contact's name: ").strip()
-    old_email = input("Please enter the old email: ").strip()
-    new_email = input("Please enter the new email: ").strip()
     record = address_book.find(name)
     if record:
+        old_email = input("Please enter the old email: ").strip()
+        new_email = input("Please enter the new email: ").strip()
         new_email_field = Email(new_email)
         result = record.edit_email(old_email, new_email_field.value)
         return result
@@ -321,10 +344,10 @@ def change_email():
 @input_error
 def change_address():
     name = input("Please enter the contact's name: ").strip()
-    old_address = input("Please enter the old address: ").strip()
-    new_address = input("Please enter the new address: ").strip()
     record = address_book.find(name)
     if record:
+        old_address = input("Please enter the old address: ").strip()
+        new_address = input("Please enter the new address: ").strip()
         new_address_field = Address(new_address)
         result = record.edit_address(old_address, new_address_field.value)
         return result
@@ -465,17 +488,17 @@ commands = {
     "add contact": add_contact_interactive,
     "add phone": add_phone,
     "add email": add_email,
-    "add adres": add_address,
+    "add address": add_address,
     "change phone": change_phone,
     "change birthday": update_birthday,
-    #"change name": ,
+    "change name": change_name,
     "change email": change_email,
     "change address": change_address,
     "remove phone": remove_phone_from_contact,
     "remove email": remove_email_from_contact,
     "remove address": remove_address_from_contact,
     "clear all": address_book.clear_all_contacts,
-    "by birthday": search_contact_by_birthday,
+    "search by birthday": search_contact_by_birthday,
     "day to birthday": when_birthday,
     "delete contact": delete_contact,
     "search": search_contacts,

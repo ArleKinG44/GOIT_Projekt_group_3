@@ -219,7 +219,11 @@ class Record:
             return f'Number phone {phone} has been removed from contact {self.name.value}.'
         else:
             return f'Phone number {phone} not found in contact {self.name.value}.'
-
+        
+    def edit_name(self, name_new):
+        self.name.value = name_new
+        return f'Name has been changed to {name_new}'
+    
     def edit_phone(self, phone_old, phone_new):
         tel_new = Phone(phone_new)
         for item in self.phones:
