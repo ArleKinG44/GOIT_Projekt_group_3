@@ -2,7 +2,7 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.lexers import PygmentsLexer
 from pygments.lexers.sql import SqlLexer
-from classes import *
+from classes import Field, Name, Phone, Birthday, Email, Address, Title, Note, Notebook, Record, AddressBook
 import sort
 import random
 
