@@ -52,7 +52,7 @@ $ git clone https://github.com/ArleKinG44/GOIT_Projekt_group_3
 
 # Install 
 To install the program, navigate to the directory where the installation package is located and enter in the command line:
-$ pip install -e 
+$ pip install -e .
 or
 $ python setup.py install
 
@@ -60,9 +60,16 @@ $ python setup.py install
 Enter the command in the command line:
 $ start
 
+# Create or load a file
+Enter the filename in the command line 
+
 # Display the list of commands
 Enter the command in the command line:
 $ help
+
+# Uninstall
+Enter the command in the command line:
+$ pip uninstall Personal-Assistant
 ```
 ## :memo: All commands
 Here are some things you can do:
