@@ -2,8 +2,8 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.lexers import PygmentsLexer
 from pygments.lexers.sql import SqlLexer
-from classes import *
-import sort
+from Code.classes import *
+from Code.sort import main as sort_main
 import random
 
 address_book = AddressBook()
