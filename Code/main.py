@@ -228,7 +228,7 @@ def sort_folder():
         source_folder = input("Please enter the path of the folder you want to sort: ")
         if not source_folder:
             raise ValueError("Please specify the source folder.")
-        sort.main(source_folder)
+        sort_main(source_folder)
         return "\nThe folder is sorted \N{winking face}\nThank you for using our sorter \N{saluting face}\nHave a nice day \N{smiling face with smiling eyes}"
     except Exception as e:
         print(f"Unexpected Error: {e}")
