@@ -13,7 +13,7 @@ setup(
     url='https://github.com/ArleKinG44/GOIT_Projekt_group_3',
     entry_points={
         'console_scripts': [
-            'my_command = main:main'
+            'start = Code.main:main'
         ],
     },
 )
