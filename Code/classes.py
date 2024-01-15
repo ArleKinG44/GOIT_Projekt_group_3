@@ -54,7 +54,6 @@ class Birthday(Field):
     def _validate(self, value):
         separators = ["-", "/", " ", "."]
         day, month, year = None, None, None
-
         for sep in separators:
             if sep in value:
                 try:
@@ -62,10 +61,8 @@ class Birthday(Field):
                     break
                 except ValueError:
                     pass
-
         if day is None or month is None or year is None:
             raise ValueError('Incorrect date format. Must be in dd-mm-yyyy, dd/mm/yyyy, dd mm yyyy, or dd.mm.yyyy')
-
         if 1 <= day <= 31 and 1 <= month <= 12 and len(str(year)) == 4:
             return f'{value} is valid birthday'
         else:
@@ -91,11 +88,9 @@ class Title(Field):
     def _validate(self, value):
         # Title starts with a letter, can contain numbers
         pattern = re.compile(r'^[a-zA-Zа-яА-Я][a-zA-Z0-9а-яА-Я\s]*$')
-
         if not value or not pattern.match(value):
             raise ValueError(
                 "Invalid title format. Title must start with a letter, can contain numbers and cannot be empty.")
-
         return f"'{value}' is a valid title for the note"
 
 
@@ -147,7 +142,6 @@ class Notebook(UserDict):
         query_lower = query.lower()
         return [note for note in self.data.values() if query_lower in note.title.value.lower() or query_lower in note.body.lower() or query_lower in note.author.value.lower()]
     
-
     def delete_note(self, title):
         if title in self.data:
             del self.data[title]
@@ -157,16 +151,10 @@ class Notebook(UserDict):
     def get_note(self, title):
         return self.data.get(title, None)
 
-    # def show_all_notes(self):
-    #     for note in self.data.values():
-    #         print(f"\nTitle: {note.title.value}\nAuthor: {note.author.value}\nCreated at: {note.created_at.strftime('%Y-%m-%d %H:%M:%S')}")
-    
-
     @staticmethod
     def tag_conversion(tags):
         if not tags:
             return ''
-
         tags = re.findall(r'#?\w+', tags)
         unique_tags = list(set(tags))
         sorted_tags = sorted(unique_tags, key=lambda x: x.lower())
@@ -174,7 +162,6 @@ class Notebook(UserDict):
             str_tag = ', '.join([f'{tag}' for tag in sorted_tags])
         else:
             str_tag = ', '.join([f'#{tag}' for tag in sorted_tags])
-
         return str_tag
     
     def add_tags(self, title, new_tags):
@@ -285,19 +272,14 @@ class Record:
 
     def days_to_birthday(self):
         today = datetime.now()
-
         if self.birthday is not None and self.birthday.value is not None:
             birth_day = self.birthday.value
             birth_day = [birth_day.replace(i, '-') for i in './- ' if i in birth_day][0]
             birth_day = datetime.strptime(birth_day, "%d-%m-%Y")
-
             next_birthday = datetime(today.year, birth_day.month, birth_day.day)
-
             if today > next_birthday:
                 next_birthday = datetime(today.year + 1, birth_day.month, birth_day.day)
-
             days_until_birthday = (next_birthday - today).days
-
             return days_until_birthday
         else:
             raise ValueError('Birthday is not set')
@@ -355,7 +337,6 @@ class AddressBook(UserDict):
         else:
             return 'Removal canceled'
 
-
     def delete(self, name):
         if name in self.data:
             del self.data[name]
@@ -366,25 +347,11 @@ class AddressBook(UserDict):
         for i in range(0, len(self.data), n):
             yield list(self.data.values())[i:i + n]
 
-    # def save_to_disk(self, filename):
-    #     while not filename.strip():
-    #         filename = input("Enter a valid filename: ").strip()
-
-    #     try:
-    #         with open(filename, 'wb+') as file:
-    #             data = [record.to_dict() for record in self.data.values()]
-    #             pickle.dump(data, file)
-    #     except FileNotFoundError:
-    #         print(f"Error: The specified directory or file '{filename}' does not exist.")
-    #     except Exception as e:
-    #         print(f"Error saving data to '{filename}': {str(e)}")
-
     def save_to_disk(self, filename, notebook):
         data = {
             'contacts': [record.to_dict() for record in self.data.values()],
             'notes': notebook.data
         }
-
         try:
             with open(filename, 'wb+') as file:
                 pickle.dump(data, file)
@@ -393,20 +360,6 @@ class AddressBook(UserDict):
         except Exception as e:
             print(f"Error saving data to '{filename}': {str(e)}")
 
-    # def load_from_disk(self, filename):
-    #     try:
-    #         with open(filename, 'rb+') as file:
-    #             print(f"\nReading data from {filename}")
-    #             data = pickle.load(file)
-    #             self.data.clear()
-    #             for record_data in data:
-    #                 record = Record.from_dict(record_data)
-    #                 self.data[str(record.name)] = record
-    #     except FileNotFoundError:
-    #         print("File not found. Creating a new address book.")
-    #     except Exception as e:
-    #         print(f"Error loading data: {str(e)}")
-
     def load_from_disk(self, filename, notebook):
         try:
             with open(filename, 'rb+') as file:
@@ -414,11 +367,9 @@ class AddressBook(UserDict):
                 data = pickle.load(file)                
                 self.data.clear()  # Clear existing data
                 notebook.data.clear()  # Load contact data
-
                 for record_data in data.get('contacts', []):
                     record = Record.from_dict(record_data)
                     self.data[str(record.name)] = record
-
                 notebook.data.update(data.get('notes', {}))  # Load notes data
         except FileNotFoundError:
             print("File not found. Creating a new file.")
@@ -428,14 +379,12 @@ class AddressBook(UserDict):
     def search_contacts(self, query):
         results = []
         query = query.lower()
-
         for record in self.data.values():
             if (
                 query in record.name.value.lower() or
                 any(query in phone.value for phone in record.phones)
             ):
                 results.append(record)
-
         return results
 
     def search_by_birthday(self, number_of_days):
@@ -444,6 +393,5 @@ class AddressBook(UserDict):
             self._birth_date = i.days_to_birthday()
             if int(number_of_days) > self._birth_date:
                 self._contact.append(i)
-
         return self._contact
     
