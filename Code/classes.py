@@ -5,7 +5,7 @@ import pickle
 
 
 class Field:
-    
+
     def __init__(self, value):
         self.__value = None
         self.value = value
@@ -34,9 +34,9 @@ class Name(Field):
 
         if len(value) < 1 or not name_pattern.match(value):
             raise ValueError("Invalid name format")
-        
+
         return f'{value} is a valid name'
-        
+
 
 class Phone(Field):
     """class for validate phone field"""
@@ -89,8 +89,7 @@ class Title(Field):
         # Title starts with a letter, can contain numbers
         pattern = re.compile(r'^[a-zA-Zа-яА-Я][a-zA-Z0-9а-яА-Я\s]*$')
         if not value or not pattern.match(value):
-            raise ValueError(
-                "Invalid title format. Title must start with a letter, can contain numbers and cannot be empty.")
+            raise ValueError("Invalid title format. Title must start with a letter, can contain numbers and cannot be empty.")
         return f"'{value}' is a valid title for the note"
 
 
@@ -101,7 +100,7 @@ class Note:
         self.author = Name(author)
         self.title = Title(title)
         self.body = body
-        self.tags = tags
+        self.tags = tags if tags else []
         self.created_at = datetime.now()  # Time of note creation
 
     def edit_note(self, new_body):
@@ -109,9 +108,6 @@ class Note:
 
     def edit_note_title(self, new_title):
         self.title.value = new_title
-
-    def edit_note_author(self, new_author):
-        self.author.value = new_author
 
     def to_dict(self):
         # Convert the Note instance into a dictionary
@@ -141,7 +137,7 @@ class Notebook(UserDict):
     def find_notes(self, query):
         query_lower = query.lower()
         return [note for note in self.data.values() if query_lower in note.title.value.lower() or query_lower in note.body.lower() or query_lower in note.author.value.lower()]
-    
+
     def delete_note(self, title):
         if title in self.data:
             del self.data[title]
@@ -163,7 +159,7 @@ class Notebook(UserDict):
         else:
             str_tag = ', '.join([f'#{tag}' for tag in sorted_tags])
         return str_tag
-    
+
     def add_tags(self, title, new_tags):
         note = self.data[title]
         current_tags = note.tags
@@ -176,7 +172,7 @@ class Notebook(UserDict):
 
     def find_notes_by_tags(self, query):
         return [note for note in self.data.values() if query in note.tags]
-    
+
     def remove_tags(self, title, tags_to_remove):
         if title in self.data:
             current_tags = self.data[title].tags.split(', ')
@@ -190,22 +186,22 @@ class Record:
     def __init__(self, name, birthday=None):
         self.name = Name(name)
         self.phones = []
-        self.emails = []  
-        self.addresses = []  
+        self.emails = []
+        self.addresses = []
         self.birthday = Birthday(birthday) if birthday else None
 
     def add_phone(self, phone):
         self.phones.append(Phone(phone))
         return f'Number phone {phone} has been add'
-    
-    def add_email(self, email):  
+
+    def add_email(self, email):
         self.emails.append(Email(email))
         return f'Email {email} has been add'
 
-    def add_address(self, address):  
+    def add_address(self, address):
         self.addresses.append(Address(address))
         return f'Address {address} has been add'
-    
+
     def update_birthday(self, new_birthday):
         if self.birthday is not None:
             self.birthday.value = new_birthday
@@ -219,11 +215,11 @@ class Record:
             return f'Number phone {phone} has been removed from contact {self.name.value}.'
         else:
             return f'Phone number {phone} not found in contact {self.name.value}.'
-        
+
     def edit_name(self, name_new):
         self.name.value = name_new
         return f'Name has been changed to {name_new}'
-    
+
     def edit_phone(self, phone_old, phone_new):
         tel_new = Phone(phone_new)
         for item in self.phones:
@@ -251,7 +247,7 @@ class Record:
                 self.emails.insert(idx, tel_new)
                 return f'Number email {email_old} has been changed to {tel_new.value}'
         raise ValueError("Email number not found for changing")
-            
+
     def remove_address(self, address):
         tel = Address(address)
         if tel.value in [item.value for item in self.addresses]:
@@ -287,7 +283,7 @@ class Record:
             return days_until_birthday
         else:
             raise ValueError('Birthday is not set')
-        
+
     def to_dict(self):
         return {
             'name': self.name.value,
@@ -332,7 +328,7 @@ class AddressBook(UserDict):
             if name.lower() == record.name.value.lower():
                 return record
         return None
-    
+
     def clear_all_contacts(self):
         yes_no = input('Are you sure you want to delete all users? (y/n) ').lower().strip()
         if yes_no == 'y':
@@ -368,10 +364,10 @@ class AddressBook(UserDict):
         try:
             with open(filename, 'rb+') as file:
                 print(f"\nReading data from {filename}")
-                data = pickle.load(file)                
+                data = pickle.load(file)
                 self.data.clear()  # Clear existing data
-                notebook.data.clear()  # Load contact data
-                for record_data in data.get('contacts', []):
+                notebook.data.clear()
+                for record_data in data.get('contacts', []):  # Load contact data
                     record = Record.from_dict(record_data)
                     self.data[str(record.name)] = record
                 notebook.data.update(data.get('notes', {}))  # Load notes data
@@ -398,4 +394,3 @@ class AddressBook(UserDict):
             if int(number_of_days) > self._birth_date:
                 self._contact.append(i)
         return self._contact
-    
