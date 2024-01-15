@@ -1,3 +1,5 @@
+from tabulate import tabulate
+from termcolor import colored
 from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.lexers import PygmentsLexer
@@ -46,42 +48,48 @@ def hello():
     return random_choice
 
 def help():
-    return """Please enter the command in accordance with the described capabilities (left column), for the specified type (right column).\n
-    Here are some things you can do:\n
-    'hello'                                                 - Be polite with our bot;)
-    'help'                                                  - See available commands and instructions.
-    'add contact'                                           - Add a new contact with an optional phone, email, address or birthday.
-    'add phone'                                             - Add an additional phone number to an existing contact.
-    'add email'                                             - Add an additional email to an existing contact.
-    'add address'                                           - Add an additional address to an existing contact.
-    'change phone'                                          - Change the phone number of an existing contact.
-    'change birthday'                                       - Change or add the birthday of an existing contact.
-    'change name'                                           - Change the name phone of an existing contact.
-    'change email'                                          - Change the email of an existing contact.
-    'change address'                                        - Change the address of an existing contact.
-    'remove phone'                                          - Remove a phone from an existing contact.
-    'remove email'                                          - Remove an email from an existing contact.
-    'remove address'                                        - Remove an address from an existing contact.
-    'clear all'                                             - Clear all contacts.
-    'search by birthday'                                    - Search contact by birthday.
-    'day to birthday'                                       - Show the number of days until the birthday for a contact.
-    'delete contact'                                        - Delete an entire contact.
-    'search'                                                - Search for contacts by name or phone number that match the entered string.
-    'find phone'                                            - Show all phone numbers for an contact.
-    'show all contacts'                                     - Show all existing contacts with phones, emails, addresses, birthday.
-    'sort folder'                                           - Sorts a folder by different types of files at the specified path.
-    'create note'                                           - Create a new note in the Notebook.
-    'change title'                                          - Change the title of an existing note.
-    'add tags'                                              - Adds tags to an existing note.
-    'edit note'                                             - Edit the content of an existing note.
-    'delete note'                                           - Delete an existing note.
-    'find note'                                             - Find notes containing the specified query in the title or body or by author.
-    'show all notes'                                        - Display all notes.
-    'find tags'                                             - Search for notes by tags.
-    'sort notes'                                            - Sort notes by tags in alphabetical order.
-    'delete tags'                                           - Remove a tag from a note.
-    'good bye' or 'close' or 'exit' or '.'                  - Exit the program.
-    """
+    commands = [
+        ("hello", "Be polite with our bot;)"),
+        ("help", "See available commands and instructions."),
+        ("add contact", "Add a new contact with an optional phone, email, address or birthday."),
+        ("add phone", "Add an additional phone number to an existing contact."),
+        ("add email", "Add an additional email to an existing contact."),
+        ("add address", "Add an additional address to an existing contact."),
+        ("change phone", "Change the phone number of an existing contact."),
+        ("change birthday", "Change or add the birthday of an existing contact."),
+        ("change name", "Change the name phone of an existing contact."),
+        ("change email", "Change the email of an existing contact."),
+        ("change address", "Change the address of an existing contact."),
+        ("remove phone", "Remove a phone from an existing contact."),
+        ("remove email", "Remove an email from an existing contact."),
+        ("remove address", "Remove an address from an existing contact."),
+        ("clear all", "Clear all contacts."),
+        ("search by birthday", "Search contact by birthday."),
+        ("day to birthday", "Show the number of days until the birthday for a contact."),
+        ("delete contact", "Delete an entire contact."),
+        ("search", "Search for contacts by name or phone number that match the entered string."),
+        ("find phone", "Show all phone numbers for an contact."),
+        ("show all contacts", "Show all existing contacts with phones, emails, addresses, birthday."),
+        ("sort folder", "Sorts a folder by different types of files at the specified path."),
+        ("create note", "Create a new note in the Notebook."),
+        ("change title", "Change the title of an existing note."),
+        ("add tags", "Adds tags to an existing note."),
+        ("edit note", "Edit the content of an existing note."),
+        ("delete note", "Delete an existing note."),
+        ("find note", "Find notes containing the specified query in the title or body or by author."),
+        ("show all notes", "Display all notes."),
+        ("find tags", "Search for notes by tags."),
+        ("sort notes", "Sort notes by tags in alphabetical order."),
+        ("delete tags", "Remove a tag from a note."),
+        ("good bye or close or exit or '.'", "Exit the program.")
+    ]
+
+    colored_commands = [
+        (colored(command, 'cyan'), colored(description, 'green')) for command, description in commands
+    ]
+
+    table = tabulate(colored_commands, headers=["Command", "Description"], tablefmt="fancy_grid")
+    return table
 
 @input_error
 def add_contact_interactive():
