@@ -69,7 +69,7 @@ Here are some things you can do:
 
 | Command                  | Description                               |
 |--------------------------|--------------------------------------------------------|
-| 'hello'                  | Be polite with our bot ##  :smiley:                              |
+| 'hello'                  | Be polite with our bot  :smiley:                              |
 | 'help'                   | See available commands and instructions.              |
 | 'add contact'            | Add a new contact with an optional phone, email, address, or birthday. |
 | 'add phone'              | Add an additional phone number to an existing contact. |
