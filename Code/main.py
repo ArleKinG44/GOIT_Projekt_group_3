@@ -1,9 +1,25 @@
+from prompt_toolkit import PromptSession
+from prompt_toolkit.completion import WordCompleter
+from prompt_toolkit.lexers import PygmentsLexer
+from pygments.lexers.sql import SqlLexer
 from classes import *
 import sort
+import random
 
 address_book = AddressBook()
 notebook = Notebook()
 
+#Completer for commands in terminal:
+sql_completer = WordCompleter([
+    'hello', 'help', 'add contact', 'add phone', 'add email', 'add address',
+    'change phone', 'change birthday', 'change name', 'change email',
+    'change address', 'remove phone', 'remove email', 'remove address',
+    'clear all', 'search by birthday', 'day to birthday', 'delete contact',
+    'search', 'find phone', 'show all contacts', 'sort folder', 'create note',
+    'change title', 'add tags', 'edit note', 'delete note', 'find note',
+    'show all notes', 'find tags', 'sort notes', 'delete tags', 'good bye',
+    'close', 'exit', '.'
+], ignore_case=True)
 
 def input_error(func):
     def wrapper(*args, **kwargs):
@@ -20,7 +36,13 @@ def input_error(func):
     return wrapper
 
 def hello():
-    return "Welcome to Your Address Book!\nType 'help' to see available commands and instructions."
+    choices = ['Welcome to Your Address Book!', 'Have a good day!', 'A sprinkle of kindness today will sweeten your tomorrow.',
+               "Your day is like a candy bar – full of delightful surprises!", "In the recipe of life, sweetness is the secret ingredient to your success.",
+               "Life is a box of chocolates, and today, you'll find the extra special ones.",
+               "Your future holds a cupcake of joy with extra frosting of love and laughter.",
+               "Love you <3"]
+    random_choice = random.choice(choices)
+    return random_choice
 
 def help():
     return """Please enter the command in accordance with the described capabilities (left column), for the specified type (right column).\n
@@ -531,8 +553,11 @@ def choice_action(data, commands):
 def main():
     filename = input("Enter the filename to load/create the address book: : ").strip()
     address_book.load_from_disk(filename, notebook)
+    print("\nWelcome to Your Address Book!\nType 'help' to see available commands and instructions.")
+    session = PromptSession(
+        lexer=PygmentsLexer(SqlLexer), completer=sql_completer)
     while True:
-        data = input("\nEnter command: ").lower().strip()
+        data = session.prompt("\nEnter command: ").lower().strip()
         func, args = choice_action(data, commands)
         result = func(args) if args else func()
         print(result)
