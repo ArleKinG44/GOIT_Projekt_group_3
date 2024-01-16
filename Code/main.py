@@ -237,7 +237,7 @@ def sort_folder():
         if not source_folder:
             raise ValueError("Please specify the source folder.")
         sort_main(source_folder)
-        return "\nThe folder is sorted \N{winking face}\nThank you for using our sorter \N{saluting face}\nHave a nice day \N{smiling face with smiling eyes}"
+        return "\nThe folder is sorted \U0001F609\nThank you for using our sorter \U0001F64C\nHave a nice day \U0001F60A"
     except Exception as e:
         print(f"Unexpected Error: {e}")
         return "\nAn unexpected error occurred. Please check your input and try again."
