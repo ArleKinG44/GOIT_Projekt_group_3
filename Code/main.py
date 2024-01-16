@@ -403,11 +403,12 @@ def find_note():
     if results:
         table_data = []
         for note in results:
+            short_note = (note.body[:12] + '...') if len(note.body) > 15 else note.body
             table_data.append([
                 colored(note.author.value, 'cyan'),
                 colored(note.title.value, 'green'),
                 colored(note.created_at.strftime('%Y-%m-%d %H:%M:%S'), 'blue'),
-                colored(note.body, 'yellow'),
+                colored(short_note, 'yellow'),
                 colored(note.tags, 'magenta')
             ])
         headers = ["Title", "Author", "Created At", "Note", "Tags"]
@@ -461,11 +462,12 @@ def show_all_notes():
     if notes:
         table_data = []
         for note in notes:
+            short_note = (note.body[:12] + '...') if len(note.body) > 15 else note.body
             table_data.append([
                 colored(note.title.value, 'cyan'),
                 colored(note.author.value, 'green'),
                 colored(note.created_at.strftime('%Y-%m-%d %H:%M:%S'), 'blue'),
-                colored(note.body, 'yellow'),
+                colored(short_note, 'yellow'),
                 colored(note.tags, 'magenta')
             ])
         headers = ["Title", "Author", "Created At", "Note", "Tags"]
@@ -496,11 +498,12 @@ def sort_notes_by_tags():
     if sorted_notes:
         table_data = []
         for note in sorted_notes:
+            short_note = (note.body[:12] + '...') if len(note.body) > 15 else note.body
             table_data.append([
                 colored(note.title.value, 'cyan'),
                 colored(note.author.value, 'green'),
                 colored(note.created_at.strftime('%Y-%m-%d %H:%M:%S'), 'blue'),
-                colored(note.body, 'yellow'),
+                colored(short_note, 'yellow'),
                 colored(note.tags, 'magenta')
             ])
         headers = ["Title", "Author", "Created At", "Note", "Tags"]
@@ -518,11 +521,12 @@ def find_notes_by_tags():
 
     table_data = []
     for note in results:
+        short_note = (note.body[:12] + '...') if len(note.body) > 15 else note.body
         table_data.append([
             colored(note.title.value, 'cyan'),
             colored(note.author.value, 'green'),
             colored(note.created_at.strftime('%Y-%m-%d %H:%M:%S'), 'blue'),
-            colored(note.body, 'yellow'),
+            colored(short_note, 'yellow'),
             colored(note.tags, 'magenta')
         ])
     headers = ["Title", "Author", "Created At", "Note", "Tags"]
