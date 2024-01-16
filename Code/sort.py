@@ -5,7 +5,8 @@ import re
 
 # Transliterates the Cyrillic alphabet into Latin
 UKRAINIAN_SYMBOLS = 'абвгдеєжзиіїйклмнопрстуфхцчшщьюя'
-TRANSLATION = ("a", "b", "v", "g", "d", "e", "je", "zh", "z", "y", "i", "ji", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
+TRANSLATION = ("a", "b", "v", "g", "d", "e", "je", "zh", "z", "y", "i", "ji",
+               "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
                "f", "h", "ts", "ch", "sh", "sch", "", "ju", "ja")
 
 TRANS = {}
@@ -78,7 +79,8 @@ def process_archive(item, item_path, normalized_item, source_folder):
     create_directory(archives_folder)
     archives.append(item)
     known_extensions.add('archive')
-    dest_path = os.path.join(archives_folder, normalized_item.rsplit('.', 1)[0])
+    dest_path = os.path.join(
+        archives_folder, normalized_item.rsplit('.', 1)[0])
     if zipfile.is_zipfile(item_path):
         with zipfile.ZipFile(item_path, 'r') as zip_ref:
             zip_ref.extractall(dest_path)
@@ -133,7 +135,8 @@ def process_folder(folder, source_folder):
 
         elif os.path.isdir(item_path):
             # Recursively process nested folders
-            if item not in ('images', 'video', 'documents', 'audio', 'archives', 'others'):
+            if item not in ('images', 'video', 'documents', 'audio',
+                            'archives', 'others'):
                 process_folder(item_path, source_folder)
                 folders.append(item)
             else:

@@ -44,7 +44,8 @@ class Phone(Field):
     def _validate(self, value):
         pattern = re.compile(r"^((\+?3)?8)?0\d{9}$")
         if not pattern.match(value):
-            raise ValueError("Phone number is not valid")
+            raise ValueError("Phone number is not valid.\
+            Example of correct number entry: 0991234567 or +380991234567")
         return f'{value} is valid phone number'
 
 
@@ -62,7 +63,8 @@ class Birthday(Field):
                 except ValueError:
                     pass
         if day is None or month is None or year is None:
-            raise ValueError('Incorrect date format. Must be in dd-mm-yyyy, dd/mm/yyyy, dd mm yyyy, or dd.mm.yyyy')
+            raise ValueError('Incorrect date format. Must be in dd-mm-yyyy,\
+                              dd/mm/yyyy, dd mm yyyy, or dd.mm.yyyy')
         if 1 <= day <= 31 and 1 <= month <= 12 and len(str(year)) == 4:
             return f'{value} is valid birthday'
         else:
@@ -71,9 +73,12 @@ class Birthday(Field):
 
 class Email(Field):
     def _validate(self, value):
-        pattern = r'^((([0-9A-Za-z]{1}[-0-9A-z\.]{1,}[0-9A-Za-z]{1})|([0-9А-Яа-я]{1}[-0-9А-я\.]{1,}[0-9А-Яа-я]{1}))@([-A-Za-z]{1,}\.){1,2}[-A-Za-z]{2,})$'
+        pattern = r'^((([0-9A-Za-z]{1}[-0-9A-z\.]{1,}[0-9A-Za-z]{1})\
+            |([0-9А-Яа-я]{1}[-0-9А-я\.]{1,}[0-9А-Яа-я]{1}))@\
+            ([-A-Za-z]{1,}\.){1,2}[-A-Za-z]{2,})$'
         if not re.match(pattern, value):
-            raise ValueError("Invalid email address")
+            raise ValueError("Invalid email address.\
+            Example of correct number entry: example@test.com")
 
 
 class Address(Field):
@@ -89,7 +94,9 @@ class Title(Field):
         # Title starts with a letter, can contain numbers
         pattern = re.compile(r'^[a-zA-Zа-яА-Я][a-zA-Z0-9а-яА-Я\s]*$')
         if not value or not pattern.match(value):
-            raise ValueError("Invalid title format. Title must start with a letter, can contain numbers and cannot be empty.")
+            raise ValueError("Invalid title format.\
+            Title must start with a letter,\
+            can contain numbers and cannot be empty.")
         return f"'{value}' is a valid title for the note"
 
 
@@ -121,11 +128,15 @@ class Note:
     @classmethod
     def from_dict(cls, notes):
         # Create a new Note instance from a dictionary
-        record = cls(notes['author'], notes['title'], notes['body'], notes['tags'])
+        record = cls(notes['author'], notes['title'],
+                     notes['body'], notes['tags'])
         return record
 
     def __str__(self):
-        return f"\nAuthor: {self.author}\nTitle: {self.title}\nCreated at: {self.created_at.strftime('%Y-%m-%d %H:%M:%S')}\nNote: {self.body}\nTags: {self.tags}\n"
+        return f"\nAuthor: {self.author}\n\
+        Title: {self.title}\n\
+        Created at: {self.created_at.strftime('%Y-%m-%d %H:%M:%S')}\n\
+        Note: {self.body}\nTags: {self.tags}\n"
 
 
 class Notebook(UserDict):
@@ -136,7 +147,11 @@ class Notebook(UserDict):
 
     def find_notes(self, query):
         query_lower = query.lower()
-        return [note for note in self.data.values() if query_lower in note.title.value.lower() or query_lower in note.body.lower() or query_lower in note.author.value.lower()]
+        return [
+            note for note in self.data.values()
+            if query_lower in note.title.value.lower()
+            or query_lower in note.body.lower()
+            or query_lower in note.author.value.lower()]
 
     def delete_note(self, title):
         if title in self.data:
@@ -167,7 +182,10 @@ class Notebook(UserDict):
         note.tags = updated_tags
 
     def sort_notes_by_tags(self):
-        sorted_notes = sorted(self.data.values(), key=lambda note: (len(note.tags), sorted(note.tags, key=lambda tag: tag[1:])))
+        sorted_notes = sorted(
+            self.data.values(),
+            key=lambda note: (len(note.tags),
+                              sorted(note.tags, key=lambda tag: tag[1:])))
         return sorted_notes
 
     def find_notes_by_tags(self, query):
@@ -176,7 +194,8 @@ class Notebook(UserDict):
     def remove_tags(self, title, tags_to_remove):
         if title in self.data:
             current_tags = self.data[title].tags.split(', ')
-            updated_tags = [tag for tag in current_tags if tag not in tags_to_remove]
+            updated_tags = [
+                tag for tag in current_tags if tag not in tags_to_remove]
             self.data[title].tags = ', '.join(updated_tags)
             return True
         return False
@@ -211,10 +230,13 @@ class Record:
     def remove_phone(self, phone):
         tel = Phone(phone)
         if tel.value in [item.value for item in self.phones]:
-            self.phones = [item for item in self.phones if tel.value != item.value]
-            return f'Number phone {phone} has been removed from contact {self.name.value}.'
+            self.phones = [
+                item for item in self.phones if tel.value != item.value]
+            return f'Number phone {phone} has been removed from contact\
+                  {self.name.value}.'
         else:
-            return f'Phone number {phone} not found in contact {self.name.value}.'
+            return f'Phone number {phone} not found in contact\
+                  {self.name.value}.'
 
     def edit_name(self, name_new):
         self.name.value = name_new
@@ -227,16 +249,20 @@ class Record:
                 idx = self.phones.index(item)
                 self.phones.remove(item)
                 self.phones.insert(idx, tel_new)
-                return f'Number phone {phone_old} has been changed to {tel_new.value}'
+                return f'Number phone {phone_old} \
+                    has been changed to {tel_new.value}'
         raise ValueError("Phone number not found for changing")
 
     def remove_email(self, email):
         tel = Email(email)
         if tel.value in [item.value for item in self.emails]:
-            self.emails = [item for item in self.emails if tel.value != item.value]
-            return f'Number email {email} has been removed from contact {self.name.value}.'
+            self.emails = [
+                item for item in self.emails if tel.value != item.value]
+            return f'Number email {email} has been removed from contact\
+                  {self.name.value}.'
         else:
-            return f'email number {email} not found in contact {self.name.value}.'
+            return f'email number {email} not found in contact\
+                  {self.name.value}.'
 
     def edit_email(self, email_old, email_new):
         tel_new = Email(email_new)
@@ -245,16 +271,20 @@ class Record:
                 idx = self.emails.index(item)
                 self.emails.remove(item)
                 self.emails.insert(idx, tel_new)
-                return f'Number email {email_old} has been changed to {tel_new.value}'
+                return f'Number email {email_old} has been changed to\
+                      {tel_new.value}'
         raise ValueError("Email number not found for changing")
 
     def remove_address(self, address):
         tel = Address(address)
         if tel.value in [item.value for item in self.addresses]:
-            self.addresses = [item for item in self.addresses if tel.value != item.value]
-            return f'Number address {address} has been removed from contact {self.name.value}.'
+            self.addresses = [
+                item for item in self.addresses if tel.value != item.value]
+            return f'Number address {address} has been removed from contact\
+                  {self.name.value}.'
         else:
-            return f'address number {address} not found in contact {self.name.value}.'
+            return f'address number {address} not found in contact\
+                  {self.name.value}.'
 
     def edit_address(self, address_old, address_new):
         tel_new = Address(address_new)
@@ -263,22 +293,27 @@ class Record:
                 idx = self.addresses.index(item)
                 self.addresses.remove(item)
                 self.addresses.insert(idx, tel_new)
-                return f'Number address {address_old} has been changed to {tel_new.value}'
+                return f'Number address {address_old} has been changed to\
+                      {tel_new.value}'
         raise ValueError("Address number not found for changing")
 
     def find_phone(self, phone):
         tel = Phone(phone)
-        return next((item for item in self.phones if tel.value == item.value), None)
+        return next(
+            (item for item in self.phones if tel.value == item.value), None)
 
     def days_to_birthday(self):
         today = datetime.now()
         if self.birthday is not None and self.birthday.value is not None:
             birth_day = self.birthday.value
-            birth_day = [birth_day.replace(i, '-') for i in './- ' if i in birth_day][0]
+            birth_day = [
+                birth_day.replace(i, '-') for i in './- ' if i in birth_day][0]
             birth_day = datetime.strptime(birth_day, "%d-%m-%Y")
-            next_birthday = datetime(today.year, birth_day.month, birth_day.day)
+            next_birthday = datetime(
+                today.year, birth_day.month, birth_day.day)
             if today > next_birthday:
-                next_birthday = datetime(today.year + 1, birth_day.month, birth_day.day)
+                next_birthday = datetime(
+                    today.year + 1, birth_day.month, birth_day.day)
             days_until_birthday = (next_birthday - today).days
             return days_until_birthday
         else:
@@ -288,9 +323,10 @@ class Record:
         return {
             'name': self.name.value,
             'phones': [phone.value for phone in self.phones],
-            'emails': [email.value for email in self.emails],  # Add this line
-            'addresses': [address.value for address in self.addresses],  # Add this line
-            'birthday': self.birthday.value if (self.birthday and hasattr(self.birthday, 'value')) else None
+            'emails': [email.value for email in self.emails],
+            'addresses': [address.value for address in self.addresses],
+            'birthday': self.birthday.value if (self.birthday and hasattr(
+                self.birthday, 'value')) else None
         }
 
     @classmethod
@@ -298,14 +334,17 @@ class Record:
         record = cls(name=data['name'], birthday=data['birthday'])
         for phone in data['phones']:
             record.add_phone(phone)
-        for email in data['emails']:  # Add this loop
+        for email in data['emails']:
             record.add_email(email)
-        for address in data['addresses']:  # Add this loop
+        for address in data['addresses']:
             record.add_address(address)
         return record
 
     def __str__(self):
-        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}, emails: {'; '.join(e.value for e in self.emails)}, addresses: {'; '.join(a.value for a in self.addresses)}"
+        return f"Contact name: {self.name.value},\
+             phones: {'; '.join(p.value for p in self.phones)},\
+             emails: {'; '.join(e.value for e in self.emails)},\
+             addresses: {'; '.join(a.value for a in self.addresses)}"
 
 
 class AddressBook(UserDict):
@@ -330,7 +369,8 @@ class AddressBook(UserDict):
         return None
 
     def clear_all_contacts(self):
-        yes_no = input('Are you sure you want to delete all users? (y/n) ').lower().strip()
+        yes_no = input('Are you sure you want to delete all users?\
+                        (y/n) ').lower().strip()
         if yes_no == 'y':
             self.data.clear()
             return "All contacts cleared."
@@ -356,7 +396,8 @@ class AddressBook(UserDict):
             with open(filename, 'wb+') as file:
                 pickle.dump(data, file)
         except FileNotFoundError:
-            print(f"Error: The specified directory or file '{filename}' does not exist.")
+            print(f"Error: The specified directory or file\
+                   '{filename}' does not exist.")
         except Exception as e:
             print(f"Error saving data to '{filename}': {str(e)}")
 
@@ -367,7 +408,7 @@ class AddressBook(UserDict):
                 data = pickle.load(file)
                 self.data.clear()  # Clear existing data
                 notebook.data.clear()
-                for record_data in data.get('contacts', []):  # Load contact data
+                for record_data in data.get('contacts', []):   # Load contact data
                     record = Record.from_dict(record_data)
                     self.data[str(record.name)] = record
                 notebook.data.update(data.get('notes', {}))  # Load notes data
