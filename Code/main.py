@@ -451,14 +451,18 @@ def remove_note():
 def show_all_notes():
     notes = notebook.data.values()
     if notes:
-        result = "\nAll notes:\n"
+        table_data = []
         for note in notes:
-            result += f"  Title: {note.title.value}\n"
-            result += f"  Author: {note.author.value}\n"
-            result += f"  Created at: {note.created_at.strftime('%Y-%m-%d %H:%M:%S')}\n"
-            result += f"  Note: {note.body}\n"
-            result += f"  Tags: {note.tags}\n\n"
-        return result
+            table_data.append([
+            colored(note.title.value, 'cyan'),
+            colored(note.author.value, 'green'),
+            colored(note.created_at.strftime('%Y-%m-%d %H:%M:%S'), 'blue'),
+            colored(note.body, 'yellow'),
+            colored(note.tags, 'magenta')
+            ])
+        headers = ["Title", "Author", "Created At", "Note", "Tags"]
+        table = tabulate(table_data, headers=headers, tablefmt="fancy_grid")
+        return table
     else:
         return "No notes found in the address book"
 
