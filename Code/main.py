@@ -19,8 +19,8 @@ sql_completer = WordCompleter([
     'clear all', 'search by birthday', 'day to birthday', 'delete contact',
     'search', 'find phone', 'show all contacts', 'sort folder', 'create note',
     'change title', 'add tags', 'edit note', 'delete note', 'find note',
-    'show all notes', 'find tags', 'sort notes', 'delete tags', 'good bye',
-    'close', 'exit', '.'
+    'show all notes', 'show note', 'find tags', 'sort notes', 'delete tags',
+    'good bye', 'close', 'exit', '.'
 ], ignore_case=True)
 
 def input_error(func):
@@ -76,6 +76,7 @@ def help():
         ("edit note", "Edit the content of an existing note."),
         ("delete note", "Delete an existing note."),
         ("find note", "Find notes containing the specified query in the title or body or by author."),
+        ("show note", "Display the contents of the selected note"),
         ("show all notes", "Display all notes."),
         ("find tags", "Search for notes by tags."),
         ("sort notes", "Sort notes by tags in alphabetical order."),
@@ -418,6 +419,20 @@ def find_note():
         return "No notes found with the given query."
 
 @input_error
+def show_note_detail():
+    title = input("Please enter the title of the note you want to view: ").strip()
+    note = notebook.get_note(title)
+    if note:
+        result = f"\nTitle: {note.title.value}\n"
+        result += f"Author: {note.author.value}\n"
+        result += f"Created at: {note.created_at.strftime('%Y-%m-%d %H:%M:%S')}\n"
+        result += f"Tags: {note.tags}\n"
+        result += f"Note: {note.body}\n"        
+        return result
+    else:
+        return f"No note found with the title '{title}'."
+
+@input_error
 def change_note_title():
     old_title = input("Please enter the current title of the note: ").strip()
     new_title = input("Please enter the new title for the note: ").strip()
@@ -575,6 +590,7 @@ commands = {
     "delete note": remove_note,
     "find note": find_note,
     "show all notes": show_all_notes,
+    "show note": show_note_detail,
     "find tags": find_notes_by_tags,
     "sort notes": sort_notes_by_tags,
     "delete tags": remove_tag,
