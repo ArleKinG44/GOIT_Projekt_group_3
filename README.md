@@ -4,8 +4,8 @@
   <a href="#dart-about">About</a> &#xa0; | &#xa0; 
   <a href="#sparkles-features">Features</a> &#xa0; | &#xa0;
   <a href="#checkered_flag-starting">Starting</a> &#xa0; | &#xa0;
-  <a href="#checkered_flag-starting">All commands</a> &#xa0; | &#xa0;
-  <a href="#memo-license">Made by</a> &#xa0; | &#xa0;
+  <a href="#memo-all-commands">All commands</a> &#xa0; | &#xa0;
+  <a href="#memo-made-by">Made by</a> &#xa0; | &#xa0;
   
 
 </p>
@@ -107,14 +107,21 @@ Here are some things you can do:
 | 'show all notes'         | Display all notes.                                    |
 | 'find tags'              | Search for notes by tags.                              |
 | 'sort notes'             | Sort notes by tags in alphabetical order.             |
-| 'delete tags'            | Remove a tag from a note.                              |
+| 'delete tags'            | Remove a tag from a note.        
+  'show note'              | Display a specific note.
 | 'good bye' or 'close' or 'exit' or '.' | Exit the program.                                     |
 
 
     
 ## :memo: Made by
 
-Made with :heart: by "Hufflepuff"
+Made with :heart: by "Hufflepuff":\
+:fire: Denis Poletuchy\
+:fire: Anastasia Rybchenko \
+:fire: Oleksandr Khreptak\
+:fire: Maksym Melnyk\
+:fire: Taras Yakymets
+
 
 &#xa0;
 

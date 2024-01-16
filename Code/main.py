@@ -11,7 +11,7 @@ import random
 address_book = AddressBook()
 notebook = Notebook()
 
-#Completer for commands in terminal:
+# Completer for commands in terminal:
 sql_completer = WordCompleter([
     'hello', 'help', 'add contact', 'add phone', 'add email', 'add address',
     'change phone', 'change birthday', 'change name', 'change email',
@@ -22,6 +22,7 @@ sql_completer = WordCompleter([
     'show all notes', 'show note', 'find tags', 'sort notes', 'delete tags',
     'good bye', 'close', 'exit', '.'
 ], ignore_case=True)
+
 
 def input_error(func):
     def wrapper(*args, **kwargs):
@@ -37,14 +38,22 @@ def input_error(func):
             return f"Error: {str(e)}"
     return wrapper
 
+
 def hello():
-    choices = ['Welcome to Your Personal Assistant!', 'Have a good day!', 'A sprinkle of kindness today will sweeten your tomorrow.',
-               "Your day is like a candy bar – full of delightful surprises!", "In the recipe of life, sweetness is the secret ingredient to your success.",
+    choices = ['Welcome to Your Personal Assistant!', 'Have a good day!',
+               'A sprinkle of kindness today will sweeten your tomorrow.',
+               "Your day is like a candy bar – full of delightful surprises!",
+               "In the recipe of life, sweetness is the secret ingredient to your success.",
                "Life is a box of chocolates, and today, you'll find the extra special ones.",
                "Your future holds a cupcake of joy with extra frosting of love and laughter.",
-               "Love you <3"]
+               "Love you <3", "Wishing you a day as lovely as your heart.",
+               "You're the sunshine on a cloudy day.",
+               "Your presence makes everything better.",
+               "Thanks for being the awesome person you are!",
+               "May your day be filled with love and happiness!"]
     random_choice = random.choice(choices)
     return random_choice
+
 
 def help():
     commands = [
@@ -85,11 +94,14 @@ def help():
     ]
 
     colored_commands = [
-        (colored(command, 'cyan'), colored(description, 'green')) for command, description in commands
+        (colored(command, 'cyan'),
+         colored(description, 'green')) for command, description in commands
     ]
 
-    table = tabulate(colored_commands, headers=["Command", "Description"], tablefmt="fancy_grid")
+    table = tabulate(colored_commands,
+                     headers=["Command", "Description"], tablefmt="fancy_grid")
     return table
+
 
 @input_error
 def add_contact_interactive():
@@ -99,7 +111,8 @@ def add_contact_interactive():
     record = Record(name)
     added_info = []
     while True:
-        phone = input("Please enter a phone number (or nothing to finish): ").strip()
+        phone = input(
+            "Please enter a phone number (or nothing to finish): ").strip()
         if phone.lower() == '':
             break
         try:
@@ -108,7 +121,8 @@ def add_contact_interactive():
         except ValueError as e:
             print(f"Error: {str(e)} Please try again. Here are some examples (+380951111111; 80501111111; 0661111111)")
     while True:
-        email = input("Please enter an email address (or nothing to finish): ").strip()
+        email = input(
+            "Please enter an email address (or nothing to finish): ").strip()
         if email.lower() == '':
             break
         try:
@@ -117,7 +131,8 @@ def add_contact_interactive():
         except ValueError as e:
             print(f"Error: {str(e)} Please try again.")
     while True:
-        address = input("Please enter an address (or nothing to finish): ").strip()
+        address = input(
+            "Please enter an address (or nothing to finish): ").strip()
         if address.lower() == '':
             break
         try:
@@ -126,7 +141,8 @@ def add_contact_interactive():
         except ValueError as e:
             print(f"Error: {str(e)} Please try again.")
     while True:
-        birthday = input("Please enter the contact's birthday (or nothing if not available): ").strip()
+        birthday = input(
+            "Please enter the contact's birthday(or nothing if not available): ").strip()
         if birthday.lower() == '':
             break
         try:
@@ -139,6 +155,7 @@ def add_contact_interactive():
     address_book.add_record(record)
 
     return f"\nContact {name} has been added : \n" + "\n".join(added_info)
+
 
 
 @input_error
@@ -161,17 +178,29 @@ def show_all_contacts():
         for record in records:
             name = colored(record.name.value, 'magenta')
 
-            phones_info = ',\n'.join(colored(phone.value, 'yellow') for phone in record.phones) if record.phones else ' '
-           
-            email_info = ',\n'.join(colored(email.value, 'blue') for email in record.emails) if record.emails else ' '
+            phones_info = ',\n'.join(
+                colored(
+                 phone.value, 'yellow')
+                for phone in record.phones) if record.phones else ' '
+             
+            email_info = ',\n'.join(
+                colored(
+                    email.value, 'blue')
+                for email in record.emails) if record.emails else ' '
 
-            address_info = ',\n'.join(colored(address.value, 'cyan') for address in record.addresses) if record.addresses else ' '
+            address_info = ',\n'.join(
+                colored(
+                    address.value, 'cyan')
+                for address in record.addresses) if record.addresses else ' '
 
-            birthday_info = colored(record.birthday, 'green') if record.birthday else ' '
+            birthday_info = colored(
+                record.birthday, 'green') if record.birthday else ' '
 
-            table_data.append([name, phones_info, email_info, address_info, birthday_info])
+            table_data.append([name, phones_info, email_info,
+                               address_info, birthday_info])
 
-        headers = [colored("Contact", 'magenta'), colored("Phone numbers", 'yellow'),
+        headers = [colored("Contact", 'magenta'),
+                   colored("Phone numbers", 'yellow'),
                    colored("Email", 'blue'), colored("Address", 'cyan'),
                    colored("Birthday", 'green')]
         table = tabulate(table_data, headers=headers, tablefmt="fancy_grid")
@@ -183,19 +212,23 @@ def show_all_contacts():
 def exit_bot():
     return "Good bye!"
 
+
 @input_error
 def unknown_command():
-    return f"Unknown command: Type 'help' for available commands."
+    return "Unknown command: Type 'help' for available commands."
+
 
 @input_error
 def save_to_disk(filename):
     address_book.save_to_disk(filename)
     return f"Address book saved to {filename}"
 
+
 @input_error
 def load_from_disk(filename):
     address_book.load_from_disk(filename)
     return f"Address book loaded from {filename}"
+
 
 @input_error
 def search_contacts():
@@ -213,21 +246,24 @@ def search_contacts():
             email_info = ', '.join(email.value for email in record.emails)
             if email_info:
                 result += f"  Email: {email_info}\n"
-            address_info = ', '.join(address.value for address in record.addresses)
+            address_info = ', '.join(
+                address.value for address in record.addresses)
             if address_info:
                 result += f"  Address: {address_info}\n"
         return result
     else:
-        return(f"No results found for '{query}'.")
- 
+        return (f"No results found for '{query}'.")
+
+
 @input_error
 def when_birthday():
     name = input("Please enter the name to check for birthday: ").strip()
     record = address_book.find(name)
     if record:
-        return f"Days until birthday for {name}: {record.days_to_birthday()} days."
+        return f"Days until birthday for {name}:{record.days_to_birthday()} days."
     else:
         raise KeyError(f"No record found for '{name}' in the address book.")
+
 
 @input_error
 def update_birthday():
@@ -240,10 +276,12 @@ def update_birthday():
     else:
         raise KeyError(f"Contact {name} not found")
 
+
 @input_error
 def sort_folder():
     try:
-        source_folder = input("Please enter the path of the folder you want to sort: ")
+        source_folder = input(
+            "Please enter the path of the folder you want to sort: ")
         if not source_folder:
             raise ValueError("Please specify the source folder.")
         sort_main(source_folder)
@@ -252,14 +290,17 @@ def sort_folder():
         print(f"Unexpected Error: {e}")
         return "\nAn unexpected error occurred. Please check your input and try again."
 
+
 @input_error
 def delete_contact():
-    name = input("Please enter the name of the contact you want to delete: ").strip()
+    name = input(
+        "Please enter the name of the contact you want to delete: ").strip()
     try:
         address_book.delete(name)
         return f"Contact {name} has been deleted."
     except KeyError:
         return f"Contact {name} not found."
+
 
 @input_error
 def add_phone():
@@ -273,9 +314,11 @@ def add_phone():
     else:
         raise KeyError(f"Contact {name} not found")
 
+
 @input_error
 def add_email():
-    name = input("Please enter the name of the contact to add email to: ").strip()
+    name = input(
+        "Please enter the name of the contact to add email to: ").strip()
     record = address_book.find(name)
     if record:
         email = input("Please enter the email to add: ").strip()
@@ -284,6 +327,7 @@ def add_email():
         return f"Email {email} has been added to contact {name}."
     else:
         raise KeyError(f"Contact {name} not found")
+
 
 @input_error
 def search_contact_by_birthday():
@@ -294,12 +338,14 @@ def search_contact_by_birthday():
     result = ''
     for i in address:
         phones_info = ', '.join(phone.value for phone in i.phones)
-        result += f"{i.name.value}:\n  Phone numbers: {phones_info}\n  Birthday: {i.birthday}\n"
+        result += f"{i.name.value}:\n Phone numbers: {phones_info}\n  Birthday: {i.birthday}\n"
     return result
+
 
 @input_error
 def add_address():
-    name = input("Please enter the name of the contact to add an address: ").strip()
+    name = input(
+        "Please enter the name of the contact to add an address: ").strip()
     record = address_book.find(name)
     if record:
         address = input("Please enter the address you want to add: ").strip()
@@ -308,6 +354,7 @@ def add_address():
         return f"Address '{address}' has been added to contact '{name}'."
     else:
         raise KeyError(f"Contact '{name}' not found")
+
 
 @input_error
 def remove_phone_from_contact():
@@ -320,6 +367,7 @@ def remove_phone_from_contact():
     else:
         raise KeyError(f"Contact {name} not found")
 
+
 @input_error
 def remove_email_from_contact():
     name = input("Please enter the contact's name: ").strip()
@@ -330,6 +378,7 @@ def remove_email_from_contact():
         return result
     else:
         raise KeyError(f"Contact {name} not found")
+
 
 @input_error
 def remove_address_from_contact():
@@ -342,6 +391,7 @@ def remove_address_from_contact():
     else:
         raise KeyError(f"Contact {name} not found")
 
+
 @input_error
 def change_name():
     name = input("Please enter the contact's name: ").strip()
@@ -353,7 +403,7 @@ def change_name():
         return result
     else:
         raise KeyError(f"Contact {name} not found")
-    
+
 
 @input_error
 def change_phone():
@@ -368,6 +418,7 @@ def change_phone():
     else:
         raise KeyError(f"Contact {name} not found")
 
+
 @input_error
 def change_email():
     name = input("Please enter the contact's name: ").strip()
@@ -380,6 +431,7 @@ def change_email():
         return result
     else:
         raise KeyError(f"Contact {name} not found")
+
 
 @input_error
 def change_address():
@@ -394,15 +446,18 @@ def change_address():
     else:
         raise KeyError
 
+
 @input_error
 def create_note():
     author = input("Please enter the author's name: ").strip()
     title = input("Please enter the note's title: ").strip()
-    body = input("Please enter the note's text: ").strip()    
-    tags = notebook.tag_conversion(input("Please enter the note's tags: ").strip())
+    body = input("Please enter the note's text: ").strip()
+    tags = notebook.tag_conversion(input(
+        "Please enter the note's tags: ").strip())
     note = Note(author, title, body, tags)
-    notebook.add_note(note)    
+    notebook.add_note(note)
     return f"Note '{title}' by {author} has been created."
+
 
 @input_error
 def find_note():
@@ -426,6 +481,7 @@ def find_note():
         return f"Found notes for query '{query}':\n" + table
     else:
         return "No notes found with the given query."
+
 
 @input_error
 def show_note_detail():
@@ -455,9 +511,11 @@ def change_note_title():
     else:
         raise KeyError(f"Note '{old_title}' not found")
 
+
 @input_error
 def edit_note_text():
-    title = input("Please enter a title of the note you want to edit: ").strip()
+    title = input(
+        "Please enter a title of the note you want to edit: ").strip()
     note = notebook.get_note(title)
     if note:
         print(f"Current note text:\n{note.body}")
@@ -470,15 +528,18 @@ def edit_note_text():
     else:
         raise KeyError(f"Note '{title}' not found")
 
+
 @input_error
 def remove_note():
-    title = input("Please enter the title of the note you want to delete: ").strip()
+    title = input(
+        "Please enter the title of the note you want to delete: ").strip()
     note = notebook.get_note(title)
     if note:
         notebook.delete_note(title)
         return f"Note '{title}' has been deleted."
     else:
         raise KeyError(f"Note '{title}' not found")
+
 
 @input_error
 def show_all_notes():
@@ -500,6 +561,7 @@ def show_all_notes():
     else:
         return "No notes found in the Notebook"
 
+
 @input_error
 def add_tag():
     title = input("Please enter the title of the note where you want to add tags: ").strip()
@@ -515,6 +577,7 @@ def add_tag():
     if len(unique_tags) != 0:
         notebook.add_tags(title, unique_tags)
     return 'Tags added'
+
 
 @input_error
 def sort_notes_by_tags():
@@ -535,6 +598,7 @@ def sort_notes_by_tags():
         return "\nHere are all the notes sorted by tag in alphabetical order:\n" + table
     else:
         return "No notes found in the Notebook"
+
 
 @input_error
 def find_notes_by_tags():
@@ -557,17 +621,22 @@ def find_notes_by_tags():
     table = tabulate(table_data, headers=headers, tablefmt="fancy_grid")
     return f"\nHere are the notes found by tags '{tags}':\n" + table
 
+
 @input_error
 def remove_tag():
-    title = input("Please enter the title from which you want to remove tags: ").strip()
+    title = input(
+        "Please enter the title from which you want to remove tags: ").strip()
     if title not in notebook.data.keys():
         raise ValueError(f"Note '{title}' not found")
     data_tags = notebook.data[title].tags
-    tags_to_remove = notebook.tag_conversion(input("Please enter tags to remove: ").strip())
+    tags_to_remove = notebook.tag_conversion(input(
+        "Please enter tags to remove: ").strip())
     tags_to_remove_list = tags_to_remove.split(', ')
-    updated_tags = [tag for tag in data_tags.split(', ') if tag not in tags_to_remove_list]
+    updated_tags = [
+        tag for tag in data_tags.split(', ') if tag not in tags_to_remove_list]
     notebook.data[title].tags = ', '.join(updated_tags)
     return f"Tags '{tags_to_remove}' have been removed"
+
 
 commands = {
     "hello": hello,
@@ -609,6 +678,7 @@ commands = {
     ".": exit_bot
 }
 
+
 def choice_action(data, commands):
     for command in commands:
         if data.startswith(command):
@@ -616,12 +686,14 @@ def choice_action(data, commands):
             return commands[command], args if args else None
     return unknown_command, None
 
+
 def main():
 
-    filename = input("Please enter the filename to load/create the Personal Organizer: ").strip()
+    filename = input("Please enter the filename to load/create the Personal Assistant: ").strip()
 
     address_book.load_from_disk(filename, notebook)
-    print("\nWelcome to Your Personal Assistant!\nType 'help' to see available commands and instructions.")
+    print("\nWelcome to Your Personal Assistant!\n",
+          "Type 'help' to see available commands and instructions.")
     session = PromptSession(
         lexer=PygmentsLexer(SqlLexer), completer=sql_completer)
     while True:
@@ -632,6 +704,7 @@ def main():
         if result == "Good bye!":
             address_book.save_to_disk(filename, notebook)
             break
+
 
 if __name__ == "__main__":
     main()
