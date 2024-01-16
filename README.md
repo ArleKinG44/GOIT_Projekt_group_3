@@ -116,11 +116,11 @@ Here are some things you can do:
 ## :memo: Made by
 
 Made with :heart: by "Hufflepuff":\
-:fire: Denis Poletuchy\
-:fire: Anastasia Rybchenko \
-:fire: Oleksandr Khreptak\
-:fire: Maksym Melnyk\
-:fire: Taras Yakymets
+:fire: [Denis Poletuchy](https://github.com/ArleKinG44)\
+:fire: [Anastasia Rybchenko](https://github.com/Lamantini)\
+:fire: [Oleksandr Khreptak](https://github.com/alex-nuclearboy)\
+:fire: [Maksym Melnyk](https://github.com/Resst94)\
+:fire: [Taras Yakymets](https://github.com/aps06)
 
 
 &#xa0;
