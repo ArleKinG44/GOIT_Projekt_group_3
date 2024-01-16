@@ -430,7 +430,7 @@ def change_note_title():
     else:
         raise KeyError(f"Note '{old_title}' not found")
 
-@input_error   
+@input_error
 def edit_note_text():
     title = input("Please enter a title of the note you want to edit: ").strip()
     note = notebook.get_note(title)
@@ -454,7 +454,7 @@ def remove_note():
         return f"Note '{title}' has been deleted."
     else:
         raise KeyError(f"Note '{title}' not found")
-    
+
 @input_error
 def show_all_notes():
     notes = notebook.data.values()
@@ -470,7 +470,7 @@ def show_all_notes():
             ])
         headers = ["Title", "Author", "Created At", "Note", "Tags"]
         table = tabulate(table_data, headers=headers, tablefmt="fancy_grid")
-        return table
+        return "\nHere are all the notes saved in the Notebook:\n" + table
     else:
         return "No notes found in the Notebook"
 
@@ -505,7 +505,7 @@ def sort_notes_by_tags():
             ])
         headers = ["Title", "Author", "Created At", "Note", "Tags"]
         table = tabulate(table_data, headers=headers, tablefmt="fancy_grid")
-        return "\nAll notes sorted by tags alphabetically:\n" + table
+        return "\nHere are all the notes sorted by tag in alphabetical order:\n" + table
     else:
         return "No notes found in the Notebook"
 
@@ -539,7 +539,7 @@ def remove_tag():
     tags_to_remove_list = tags_to_remove.split(', ')
     updated_tags = [tag for tag in data_tags.split(', ') if tag not in tags_to_remove_list]
     notebook.data[title].tags = ', '.join(updated_tags)
-    return 'Tags have been removed'
+    return f"Tags '{tags_to_remove}' have been removed"
 
 commands = {
     "hello": hello,
