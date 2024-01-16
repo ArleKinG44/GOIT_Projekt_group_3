@@ -420,14 +420,16 @@ def find_note():
 
 @input_error
 def show_note_detail():
-    title = input("Please enter the title of the note you want to view: ").strip()
+    title = input(
+        "Please enter the title of the note you want to view: ").strip()
     note = notebook.get_note(title)
     if note:
+        wrapped_body = textwrap.fill(note.body, width=79)
         result = f"\nTitle: {note.title.value}\n"
         result += f"Author: {note.author.value}\n"
         result += f"Created at: {note.created_at.strftime('%Y-%m-%d %H:%M:%S')}\n"
         result += f"Tags: {note.tags}\n"
-        result += f"Note: {note.body}\n"        
+        result += f"Note:\n{wrapped_body}\n"        
         return result
     else:
         return f"No note found with the title '{title}'."
