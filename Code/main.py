@@ -401,10 +401,18 @@ def find_note():
         return "Please provide a search query."
     results = notebook.find_notes(query)
     if results:
-        result = "Found notes:\n"
+        table_data = []
         for note in results:
-            result += f"Author: {note.author.value}\nTitle: {note.title.value}\nNote: {note.body}\nTags: {note.tags}\n\n"
-        return result
+            table_data.append([
+                colored(note.author.value, 'cyan'),
+                colored(note.title.value, 'green'),
+                colored(note.created_at.strftime('%Y-%m-%d %H:%M:%S'), 'blue'),
+                colored(note.body, 'yellow'),
+                colored(note.tags, 'magenta')
+            ])
+        headers = ["Title", "Author", "Created At", "Note", "Tags"]
+        table = tabulate(table_data, headers=headers, tablefmt="fancy_grid")
+        return f"Found notes for query '{query}':\n" + table
     else:
         return "No notes found with the given query."
 
@@ -454,17 +462,17 @@ def show_all_notes():
         table_data = []
         for note in notes:
             table_data.append([
-            colored(note.title.value, 'cyan'),
-            colored(note.author.value, 'green'),
-            colored(note.created_at.strftime('%Y-%m-%d %H:%M:%S'), 'blue'),
-            colored(note.body, 'yellow'),
-            colored(note.tags, 'magenta')
+                colored(note.title.value, 'cyan'),
+                colored(note.author.value, 'green'),
+                colored(note.created_at.strftime('%Y-%m-%d %H:%M:%S'), 'blue'),
+                colored(note.body, 'yellow'),
+                colored(note.tags, 'magenta')
             ])
         headers = ["Title", "Author", "Created At", "Note", "Tags"]
         table = tabulate(table_data, headers=headers, tablefmt="fancy_grid")
         return table
     else:
-        return "No notes found in the address book"
+        return "No notes found in the Notebook"
 
 @input_error
 def add_tag():
@@ -482,16 +490,24 @@ def add_tag():
         notebook.add_tags(title, unique_tags)
     return 'Tags added'
 
+@input_error
 def sort_notes_by_tags():
     sorted_notes = notebook.sort_notes_by_tags()
-    result = "\nAll notes sorted by tags alphabetically:\n"
-    for note in sorted_notes:
-        result += f"  Title: {note.title.value}\n"
-        result += f"  Author: {note.author.value}\n"
-        result += f"  Created at: {note.created_at.strftime('%Y-%m-%d %H:%M:%S')}\n"
-        result += f"  Note: {note.body}\n"
-        result += f"  Tags: {note.tags}\n\n"
-    return result
+    if sorted_notes:
+        table_data = []
+        for note in sorted_notes:
+            table_data.append([
+                colored(note.title.value, 'cyan'),
+                colored(note.author.value, 'green'),
+                colored(note.created_at.strftime('%Y-%m-%d %H:%M:%S'), 'blue'),
+                colored(note.body, 'yellow'),
+                colored(note.tags, 'magenta')
+            ])
+        headers = ["Title", "Author", "Created At", "Note", "Tags"]
+        table = tabulate(table_data, headers=headers, tablefmt="fancy_grid")
+        return "\nAll notes sorted by tags alphabetically:\n" + table
+    else:
+        return "No notes found in the Notebook"
 
 @input_error
 def find_notes_by_tags():
@@ -499,11 +515,20 @@ def find_notes_by_tags():
     results = notebook.find_notes_by_tags(tags)
     if not results:
         return f"No notes found with the specified tag: {tags}."
-    result = f"\nHere are the notes found by tags '{tags}':\n"
+
+    table_data = []
     for note in results:
-        result += f"\nAuthor: {note.author.value}\nTitle: {note.title.value}\nNote: {note.body}\n"
-    return result
- 
+        table_data.append([
+            colored(note.title.value, 'cyan'),
+            colored(note.author.value, 'green'),
+            colored(note.created_at.strftime('%Y-%m-%d %H:%M:%S'), 'blue'),
+            colored(note.body, 'yellow'),
+            colored(note.tags, 'magenta')
+        ])
+    headers = ["Title", "Author", "Created At", "Note", "Tags"]
+    table = tabulate(table_data, headers=headers, tablefmt="fancy_grid")
+    return f"\nHere are the notes found by tags '{tags}':\n" + table
+
 @input_error
 def remove_tag():
     title = input("Please enter the title from which you want to remove tags: ").strip()
