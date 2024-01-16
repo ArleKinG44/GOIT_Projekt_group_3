@@ -93,6 +93,8 @@ def help():
 @input_error
 def add_contact_interactive():
     name = input("Please enter the contact's name: ").strip()
+    if address_book.find(name):
+        return f"Error: A contact with the name {name} already exists."
     record = Record(name)
     added_info = []
     while True:
@@ -103,7 +105,7 @@ def add_contact_interactive():
             record.add_phone(phone)
             added_info.append(f"Phone number: {phone}")
         except ValueError as e:
-            print(f"Error: {str(e)} Please try again.")
+            print(f"Error: {str(e)} Please try again. Here are some examples (+380951111111; 80501111111; 0661111111)")
     while True:
         email = input("Please enter an email address (or nothing to finish): ").strip()
         if email.lower() == '':
@@ -135,7 +137,8 @@ def add_contact_interactive():
 
     address_book.add_record(record)
 
-    return f"Contact {name} has been added : \n" + "\n".join(added_info)
+    return f"\nContact {name} has been added : \n" + "\n".join(added_info)
+
 
 @input_error
 def get_phone():
