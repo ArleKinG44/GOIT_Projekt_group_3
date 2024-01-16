@@ -19,8 +19,8 @@ sql_completer = WordCompleter([
     'clear all', 'search by birthday', 'day to birthday', 'delete contact',
     'search', 'find phone', 'show all contacts', 'sort folder', 'create note',
     'change title', 'add tags', 'edit note', 'delete note', 'find note',
-    'show all notes', 'find tags', 'sort notes', 'delete tags', 'good bye',
-    'close', 'exit', '.'
+    'show all notes', 'show note', 'find tags', 'sort notes', 'delete tags',
+    'good bye', 'close', 'exit', '.'
 ], ignore_case=True)
 
 def input_error(func):
@@ -76,6 +76,7 @@ def help():
         ("edit note", "Edit the content of an existing note."),
         ("delete note", "Delete an existing note."),
         ("find note", "Find notes containing the specified query in the title or body or by author."),
+        ("show note", "Display the contents of the selected note"),
         ("show all notes", "Display all notes."),
         ("find tags", "Search for notes by tags."),
         ("sort notes", "Sort notes by tags in alphabetical order."),
@@ -412,11 +413,12 @@ def find_note():
     if results:
         table_data = []
         for note in results:
+            short_note = (note.body[:12] + '...') if len(note.body) > 15 else note.body
             table_data.append([
                 colored(note.author.value, 'cyan'),
                 colored(note.title.value, 'green'),
                 colored(note.created_at.strftime('%Y-%m-%d %H:%M:%S'), 'blue'),
-                colored(note.body, 'yellow'),
+                colored(short_note, 'yellow'),
                 colored(note.tags, 'magenta')
             ])
         headers = ["Title", "Author", "Created At", "Note", "Tags"]
@@ -424,6 +426,20 @@ def find_note():
         return f"Found notes for query '{query}':\n" + table
     else:
         return "No notes found with the given query."
+
+@input_error
+def show_note_detail():
+    title = input("Please enter the title of the note you want to view: ").strip()
+    note = notebook.get_note(title)
+    if note:
+        result = f"\nTitle: {note.title.value}\n"
+        result += f"Author: {note.author.value}\n"
+        result += f"Created at: {note.created_at.strftime('%Y-%m-%d %H:%M:%S')}\n"
+        result += f"Tags: {note.tags}\n"
+        result += f"Note: {note.body}\n"        
+        return result
+    else:
+        return f"No note found with the title '{title}'."
 
 @input_error
 def change_note_title():
@@ -470,11 +486,12 @@ def show_all_notes():
     if notes:
         table_data = []
         for note in notes:
+            short_note = (note.body[:12] + '...') if len(note.body) > 15 else note.body
             table_data.append([
                 colored(note.title.value, 'cyan'),
                 colored(note.author.value, 'green'),
                 colored(note.created_at.strftime('%Y-%m-%d %H:%M:%S'), 'blue'),
-                colored(note.body, 'yellow'),
+                colored(short_note, 'yellow'),
                 colored(note.tags, 'magenta')
             ])
         headers = ["Title", "Author", "Created At", "Note", "Tags"]
@@ -505,11 +522,12 @@ def sort_notes_by_tags():
     if sorted_notes:
         table_data = []
         for note in sorted_notes:
+            short_note = (note.body[:12] + '...') if len(note.body) > 15 else note.body
             table_data.append([
                 colored(note.title.value, 'cyan'),
                 colored(note.author.value, 'green'),
                 colored(note.created_at.strftime('%Y-%m-%d %H:%M:%S'), 'blue'),
-                colored(note.body, 'yellow'),
+                colored(short_note, 'yellow'),
                 colored(note.tags, 'magenta')
             ])
         headers = ["Title", "Author", "Created At", "Note", "Tags"]
@@ -527,11 +545,12 @@ def find_notes_by_tags():
 
     table_data = []
     for note in results:
+        short_note = (note.body[:12] + '...') if len(note.body) > 15 else note.body
         table_data.append([
             colored(note.title.value, 'cyan'),
             colored(note.author.value, 'green'),
             colored(note.created_at.strftime('%Y-%m-%d %H:%M:%S'), 'blue'),
-            colored(note.body, 'yellow'),
+            colored(short_note, 'yellow'),
             colored(note.tags, 'magenta')
         ])
     headers = ["Title", "Author", "Created At", "Note", "Tags"]
@@ -580,6 +599,7 @@ commands = {
     "delete note": remove_note,
     "find note": find_note,
     "show all notes": show_all_notes,
+    "show note": show_note_detail,
     "find tags": find_notes_by_tags,
     "sort notes": sort_notes_by_tags,
     "delete tags": remove_tag,
