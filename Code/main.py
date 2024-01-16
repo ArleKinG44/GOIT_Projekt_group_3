@@ -38,7 +38,7 @@ def input_error(func):
     return wrapper
 
 def hello():
-    choices = ['Welcome to Your Address Book!', 'Have a good day!', 'A sprinkle of kindness today will sweeten your tomorrow.',
+    choices = ['Welcome to Your Personal Assistant!', 'Have a good day!', 'A sprinkle of kindness today will sweeten your tomorrow.',
                "Your day is like a candy bar – full of delightful surprises!", "In the recipe of life, sweetness is the secret ingredient to your success.",
                "Life is a box of chocolates, and today, you'll find the extra special ones.",
                "Your future holds a cupcake of joy with extra frosting of love and laughter.",
@@ -561,7 +561,7 @@ def choice_action(data, commands):
 def main():
     filename = input("Please enter the filename to load/create the Personal Organizer: : ").strip()
     address_book.load_from_disk(filename, notebook)
-    print("\nWelcome to Your Address Book!\nType 'help' to see available commands and instructions.")
+    print("\nWelcome to Your Personal Assistant!\nType 'help' to see available commands and instructions.")
     session = PromptSession(
         lexer=PygmentsLexer(SqlLexer), completer=sql_completer)
     while True:
