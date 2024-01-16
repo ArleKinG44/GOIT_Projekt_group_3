@@ -148,27 +148,33 @@ def get_phone():
                 return f"Phone numbers for {name}: {phones_info}"
     return f"No contact found for {name}"
 
+
 @input_error
 def show_all_contacts():
     records = address_book.data.values()
     if records:
-        result = "All contacts:\n"
+        table_data = []
         for record in records:
-            result += f"{record.name.value}:\n"
-            phones_info = ', '.join(phone.value for phone in record.phones)
-            if phones_info:
-                result += f"  Phone numbers: {phones_info}\n"
-            if record.birthday:
-                result += f"  Birthday: {record.birthday}\n"
-            email_info = ', '.join(email.value for email in record.emails)
-            if email_info:
-                result += f"  Email: {email_info}\n"
-            address_info = ', '.join(address.value for address in record.addresses)
-            if address_info:
-                result += f"  Address: {address_info}\n"
-        return result
+            name = colored(record.name.value, 'magenta')
+
+            phones_info = ',\n'.join(colored(phone.value, 'yellow') for phone in record.phones) if record.phones else ' '
+           
+            email_info = ',\n'.join(colored(email.value, 'blue') for email in record.emails) if record.emails else ' '
+
+            address_info = ',\n'.join(colored(address.value, 'cyan') for address in record.addresses) if record.addresses else ' '
+
+            birthday_info = colored(record.birthday, 'green') if record.birthday else ' '
+
+            table_data.append([name, phones_info, email_info, address_info, birthday_info])
+
+        headers = [colored("Contact", 'magenta'), colored("Phone numbers", 'yellow'),
+                   colored("Email", 'blue'), colored("Address", 'cyan'),
+                   colored("Birthday", 'green')]
+        table = tabulate(table_data, headers=headers, tablefmt="fancy_grid")
+        return table
     else:
         return "Contact list is empty"
+
 
 def exit_bot():
     return "Good bye!"
@@ -588,7 +594,9 @@ def choice_action(data, commands):
     return unknown_command, None
 
 def main():
+
     filename = input("Please enter the filename to load/create the Personal Organizer: ").strip()
+
     address_book.load_from_disk(filename, notebook)
     print("\nWelcome to Your Personal Assistant!\nType 'help' to see available commands and instructions.")
     session = PromptSession(
