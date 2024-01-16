@@ -559,7 +559,7 @@ def choice_action(data, commands):
     return unknown_command, None
 
 def main():
-    filename = input("Please enter the filename to load/create the Personal Organizer: : ").strip()
+    filename = input("Please enter the filename to load/create the Personal Organizer: ").strip()
     address_book.load_from_disk(filename, notebook)
     print("\nWelcome to Your Personal Assistant!\nType 'help' to see available commands and instructions.")
     session = PromptSession(
