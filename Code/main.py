@@ -43,12 +43,9 @@ def hello():
     choices = ['Welcome to Your Personal Assistant!', 'Have a good day!',
                'A sprinkle of kindness today will sweeten your tomorrow.',
                "Your day is like a candy bar – full of delightful surprises!",
-               "In the recipe of life, sweetness is the secret ingredient\
-                to your success.",
-               "Life is a box of chocolates, and today, you'll find the extra\
-                special ones.",
-               "Your future holds a cupcake of joy with extra frosting of\
-                love and laughter.",
+               "In the recipe of life, sweetness is the secret ingredient to your success.",
+               "Life is a box of chocolates, and today, you'll find the extra special ones.",
+               "Your future holds a cupcake of joy with extra frosting of love and laughter.",
                "Love you <3", "Wishing you a day as lovely as your heart.",
                "You're the sunshine on a cloudy day.",
                "Your presence makes everything better.",
@@ -62,15 +59,12 @@ def help():
     commands = [
         ("hello", "Be polite with our bot;)"),
         ("help", "See available commands and instructions."),
-        ("add contact", "Add a new contact with an optional phone, email,\
-          address or birthday."),
-        ("add phone", "Add an additional phone number to an existing\
-          contact."),
+        ("add contact", "Add a new contact with an optional phone, email, address or birthday."),
+        ("add phone", "Add an additional phone number to an existing contact."),
         ("add email", "Add an additional email to an existing contact."),
         ("add address", "Add an additional address to an existing contact."),
         ("change phone", "Change the phone number of an existing contact."),
-        ("change birthday", "Change or add the birthday of an existing\
-          contact."),
+        ("change birthday", "Change or add the birthday of an existing contact."),
         ("change name", "Change the name phone of an existing contact."),
         ("change email", "Change the email of an existing contact."),
         ("change address", "Change the address of an existing contact."),
@@ -79,23 +73,18 @@ def help():
         ("remove address", "Remove an address from an existing contact."),
         ("clear all", "Clear all contacts."),
         ("search by birthday", "Search contact by birthday."),
-        ("day to birthday", "Show the number of days until the birthday for\
-          a contact."),
+        ("day to birthday", "Show the number of days until the birthday for a contact."),
         ("delete contact", "Delete an entire contact."),
-        ("search", "Search for contacts by name or phone number that match the\
-          entered string."),
+        ("search", "Search for contacts by name or phone number that match the entered string."),
         ("find phone", "Show all phone numbers for an contact."),
-        ("show all contacts", "Show all existing contacts with phones, emails,\
-          addresses, birthday."),
-        ("sort folder", "Sorts a folder by different types of files at the\
-          specified path."),
+        ("show all contacts", "Show all existing contacts with phones, emails, addresses, birthday."),
+        ("sort folder", "Sorts a folder by different types of files at the specified path."),
         ("create note", "Create a new note in the Notebook."),
         ("change title", "Change the title of an existing note."),
         ("add tags", "Adds tags to an existing note."),
         ("edit note", "Edit the content of an existing note."),
         ("delete note", "Delete an existing note."),
-        ("find note", "Find notes containing the specified query in the title\
-          or body or by author."),
+        ("find note", "Find notes containing the specified query in the title or body or by author."),
         ("show all notes", "Display all notes."),
         ("find tags", "Search for notes by tags."),
         ("sort notes", "Sort notes by tags in alphabetical order."),
@@ -149,8 +138,8 @@ def add_contact_interactive():
         except ValueError as e:
             print(f"Error: {str(e)} Please try again.")
     while True:
-        birthday = input("Please enter the contact's birthday\
-                          (or nothing if not available): ").strip()
+        birthday = input(
+            "Please enter the contact's birthday(or nothing if not available): ").strip()
         if birthday.lower() == '':
             break
         try:
@@ -267,8 +256,7 @@ def when_birthday():
     name = input("Please enter the name to check for birthday: ").strip()
     record = address_book.find(name)
     if record:
-        return f"Days until birthday for {name}:\
-              {record.days_to_birthday()} days."
+        return f"Days until birthday for {name}:{record.days_to_birthday()} days."
     else:
         raise KeyError(f"No record found for '{name}' in the address book.")
 
@@ -293,12 +281,10 @@ def sort_folder():
         if not source_folder:
             raise ValueError("Please specify the source folder.")
         sort_main(source_folder)
-        return "\nThe folder is sorted \U0001F609\nThank you\
-              for using our sorter \U0001F64C\nHave a nice day \U0001F60A"
+        return "\nThe folder is sorted \U0001F609\nThank you for using our sorter \U0001F64C\nHave a nice day \U0001F60A"
     except Exception as e:
         print(f"Unexpected Error: {e}")
-        return "\nAn unexpected error occurred.\
-              Please check your input and try again."
+        return "\nAn unexpected error occurred. Please check your input and try again."
 
 
 @input_error
@@ -348,8 +334,7 @@ def search_contact_by_birthday():
     result = ''
     for i in address:
         phones_info = ', '.join(phone.value for phone in i.phones)
-        result += f"{i.name.value}:\n \
-              Phone numbers: {phones_info}\n  Birthday: {i.birthday}\n"
+        result += f"{i.name.value}:\n Phone numbers: {phones_info}\n  Birthday: {i.birthday}\n"
     return result
 
 
@@ -472,8 +457,7 @@ def create_note():
 
 @input_error
 def find_note():
-    query = input("Please enter search query for notes\
-                   (author, title, or content): ").strip()
+    query = input("Please enter search query for notes (author, title, or content): ").strip()
     if not query:
         return "Please provide a search query."
     results = notebook.find_notes(query)
@@ -504,8 +488,7 @@ def change_note_title():
         notebook.delete_note(old_title)
         note.title.value = new_title
         notebook.add_note(note)
-        return f"Note title has been changed from\
-              '{old_title}' to '{new_title}'."
+        return f"Note title has been changed from '{old_title}' to '{new_title}'."
     else:
         raise KeyError(f"Note '{old_title}' not found")
 
@@ -517,8 +500,7 @@ def edit_note_text():
     note = notebook.get_note(title)
     if note:
         print(f"Current note text:\n{note.body}")
-        new_body = input("Please enter a new note text\
-                          (or press Enter to keep the current text): ").strip()
+        new_body = input("Please enter a new note text (or press Enter to keep the current text): ").strip()
         if new_body:
             note.edit_note(new_body)
             return f"Note '{title}' has been updated."
@@ -562,8 +544,7 @@ def show_all_notes():
 
 @input_error
 def add_tag():
-    title = input("Please enter the title of the note\
-                   where you want to add tags: ").strip()
+    title = input("Please enter the title of the note where you want to add tags: ").strip()
     if title not in notebook.data.keys():
         raise ValueError(f"Note '{title}' not found")
     data_tags = notebook.data[title].tags
@@ -593,8 +574,7 @@ def sort_notes_by_tags():
             ])
         headers = ["Title", "Author", "Created At", "Note", "Tags"]
         table = tabulate(table_data, headers=headers, tablefmt="fancy_grid")
-        return "\nHere are all the notes sorted by tag\
-              in alphabetical order:\n" + table
+        return "\nHere are all the notes sorted by tag in alphabetical order:\n" + table
     else:
         return "No notes found in the Notebook"
 
@@ -686,12 +666,11 @@ def choice_action(data, commands):
 
 def main():
 
-    filename = input("Please enter the filename to load/create\
-                      the Personal Assistant: ").strip()
+    filename = input("Please enter the filename to load/create the Personal Assistant: ").strip()
 
     address_book.load_from_disk(filename, notebook)
-    print("\nWelcome to Your Personal Assistant!\n \
-          Type 'help' to see available commands and instructions.")
+    print("\nWelcome to Your Personal Assistant!\n",
+          "Type 'help' to see available commands and instructions.")
     session = PromptSession(
         lexer=PygmentsLexer(SqlLexer), completer=sql_completer)
     while True:

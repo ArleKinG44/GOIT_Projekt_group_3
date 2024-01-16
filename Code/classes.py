@@ -44,8 +44,8 @@ class Phone(Field):
     def _validate(self, value):
         pattern = re.compile(r"^((\+?3)?8)?0\d{9}$")
         if not pattern.match(value):
-            raise ValueError("Phone number is not valid.\
-            Example of correct number entry: 0991234567 or +380991234567")
+            raise ValueError("Phone number is not valid.\n"
+                             "Example of correct number entry: 0991234567 or +380991234567")
         return f'{value} is valid phone number'
 
 
@@ -63,8 +63,7 @@ class Birthday(Field):
                 except ValueError:
                     pass
         if day is None or month is None or year is None:
-            raise ValueError('Incorrect date format. Must be in dd-mm-yyyy,\
-                              dd/mm/yyyy, dd mm yyyy, or dd.mm.yyyy')
+            raise ValueError('Incorrect date format. Must be in dd-mm-yyyy,dd/mm/yyyy, dd mm yyyy, or dd.mm.yyyy')
         if 1 <= day <= 31 and 1 <= month <= 12 and len(str(year)) == 4:
             return f'{value} is valid birthday'
         else:
@@ -73,12 +72,10 @@ class Birthday(Field):
 
 class Email(Field):
     def _validate(self, value):
-        pattern = r'^((([0-9A-Za-z]{1}[-0-9A-z\.]{1,}[0-9A-Za-z]{1})\
-            |([0-9А-Яа-я]{1}[-0-9А-я\.]{1,}[0-9А-Яа-я]{1}))@\
-            ([-A-Za-z]{1,}\.){1,2}[-A-Za-z]{2,})$'
+        pattern = r'^((([0-9A-Za-z]{1}[-0-9A-z\.]{1,}[0-9A-Za-z]{1})|([0-9А-Яа-я]{1}[-0-9А-я\.]{1,}[0-9А-Яа-я]{1}))@([-A-Za-z]{1,}\.){1,2}[-A-Za-z]{2,})$'
         if not re.match(pattern, value):
-            raise ValueError("Invalid email address.\
-            Example of correct number entry: example@test.com")
+            raise ValueError("Invalid email address.\n"
+                             "Example of correct number entry: example@test.com")
 
 
 class Address(Field):
@@ -94,9 +91,7 @@ class Title(Field):
         # Title starts with a letter, can contain numbers
         pattern = re.compile(r'^[a-zA-Zа-яА-Я][a-zA-Z0-9а-яА-Я\s]*$')
         if not value or not pattern.match(value):
-            raise ValueError("Invalid title format.\
-            Title must start with a letter,\
-            can contain numbers and cannot be empty.")
+            raise ValueError("Invalid title format. Title must start with a letter, can contain numbers and cannot be empty.")
         return f"'{value}' is a valid title for the note"
 
 
@@ -232,11 +227,9 @@ class Record:
         if tel.value in [item.value for item in self.phones]:
             self.phones = [
                 item for item in self.phones if tel.value != item.value]
-            return f'Number phone {phone} has been removed from contact\
-                  {self.name.value}.'
+            return f'Number phone {phone} has been removed from contact {self.name.value}.'
         else:
-            return f'Phone number {phone} not found in contact\
-                  {self.name.value}.'
+            return f'Phone number {phone} not found in contact {self.name.value}.'
 
     def edit_name(self, name_new):
         self.name.value = name_new
@@ -249,8 +242,7 @@ class Record:
                 idx = self.phones.index(item)
                 self.phones.remove(item)
                 self.phones.insert(idx, tel_new)
-                return f'Number phone {phone_old} \
-                    has been changed to {tel_new.value}'
+                return f'Number phone {phone_old} has been changed to {tel_new.value}'
         raise ValueError("Phone number not found for changing")
 
     def remove_email(self, email):
@@ -258,11 +250,9 @@ class Record:
         if tel.value in [item.value for item in self.emails]:
             self.emails = [
                 item for item in self.emails if tel.value != item.value]
-            return f'Number email {email} has been removed from contact\
-                  {self.name.value}.'
+            return f'Number email {email} has been removed from contact {self.name.value}.'
         else:
-            return f'email number {email} not found in contact\
-                  {self.name.value}.'
+            return f'email number {email} not found in contact {self.name.value}.'
 
     def edit_email(self, email_old, email_new):
         tel_new = Email(email_new)
@@ -271,8 +261,7 @@ class Record:
                 idx = self.emails.index(item)
                 self.emails.remove(item)
                 self.emails.insert(idx, tel_new)
-                return f'Number email {email_old} has been changed to\
-                      {tel_new.value}'
+                return f'Number email {email_old} has been changed to {tel_new.value}'
         raise ValueError("Email number not found for changing")
 
     def remove_address(self, address):
@@ -280,11 +269,9 @@ class Record:
         if tel.value in [item.value for item in self.addresses]:
             self.addresses = [
                 item for item in self.addresses if tel.value != item.value]
-            return f'Number address {address} has been removed from contact\
-                  {self.name.value}.'
+            return f'Number address {address} has been removed from contact {self.name.value}.'
         else:
-            return f'address number {address} not found in contact\
-                  {self.name.value}.'
+            return f'address number {address} not found in contact {self.name.value}.'
 
     def edit_address(self, address_old, address_new):
         tel_new = Address(address_new)
@@ -293,8 +280,7 @@ class Record:
                 idx = self.addresses.index(item)
                 self.addresses.remove(item)
                 self.addresses.insert(idx, tel_new)
-                return f'Number address {address_old} has been changed to\
-                      {tel_new.value}'
+                return f'Number address {address_old} has been changed to {tel_new.value}'
         raise ValueError("Address number not found for changing")
 
     def find_phone(self, phone):
@@ -369,8 +355,7 @@ class AddressBook(UserDict):
         return None
 
     def clear_all_contacts(self):
-        yes_no = input('Are you sure you want to delete all users?\
-                        (y/n) ').lower().strip()
+        yes_no = input('Are you sure you want to delete all users? (y/n) ').lower().strip()
         if yes_no == 'y':
             self.data.clear()
             return "All contacts cleared."
@@ -396,8 +381,7 @@ class AddressBook(UserDict):
             with open(filename, 'wb+') as file:
                 pickle.dump(data, file)
         except FileNotFoundError:
-            print(f"Error: The specified directory or file\
-                   '{filename}' does not exist.")
+            print(f"Error: The specified directory or file '{filename}' does not exist.")
         except Exception as e:
             print(f"Error saving data to '{filename}': {str(e)}")
 
