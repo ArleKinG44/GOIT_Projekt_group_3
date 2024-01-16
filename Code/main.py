@@ -151,27 +151,33 @@ def get_phone():
                 return f"Phone numbers for {name}: {phones_info}"
     return f"No contact found for {name}"
 
+
 @input_error
 def show_all_contacts():
     records = address_book.data.values()
     if records:
-        result = "All contacts:\n"
+        table_data = []
         for record in records:
-            result += f"{record.name.value}:\n"
-            phones_info = ', '.join(phone.value for phone in record.phones)
-            if phones_info:
-                result += f"  Phone numbers: {phones_info}\n"
-            if record.birthday:
-                result += f"  Birthday: {record.birthday}\n"
-            email_info = ', '.join(email.value for email in record.emails)
-            if email_info:
-                result += f"  Email: {email_info}\n"
-            address_info = ', '.join(address.value for address in record.addresses)
-            if address_info:
-                result += f"  Address: {address_info}\n"
-        return result
+            name = colored(record.name.value, 'magenta')
+
+            phones_info = ',\n'.join(colored(phone.value, 'yellow') for phone in record.phones) if record.phones else ' '
+           
+            email_info = ',\n'.join(colored(email.value, 'blue') for email in record.emails) if record.emails else ' '
+
+            address_info = ',\n'.join(colored(address.value, 'cyan') for address in record.addresses) if record.addresses else ' '
+
+            birthday_info = colored(record.birthday, 'green') if record.birthday else ' '
+
+            table_data.append([name, phones_info, email_info, address_info, birthday_info])
+
+        headers = [colored("Contact", 'magenta'), colored("Phone numbers", 'yellow'),
+                   colored("Email", 'blue'), colored("Address", 'cyan'),
+                   colored("Birthday", 'green')]
+        table = tabulate(table_data, headers=headers, tablefmt="fancy_grid")
+        return table
     else:
         return "Contact list is empty"
+
 
 def exit_bot():
     return "Good bye!"
@@ -240,7 +246,7 @@ def sort_folder():
         if not source_folder:
             raise ValueError("Please specify the source folder.")
         sort_main(source_folder)
-        return "\nThe folder is sorted \N{winking face}\nThank you for using our sorter \N{saluting face}\nHave a nice day \N{smiling face with smiling eyes}"
+        return "\nThe folder is sorted \U0001F609\nThank you for using our sorter \U0001F64C\nHave a nice day \U0001F60A"
     except Exception as e:
         print(f"Unexpected Error: {e}")
         return "\nAn unexpected error occurred. Please check your input and try again."
@@ -404,10 +410,18 @@ def find_note():
         return "Please provide a search query."
     results = notebook.find_notes(query)
     if results:
-        result = "Found notes:\n"
+        table_data = []
         for note in results:
-            result += f"Author: {note.author.value}\nTitle: {note.title.value}\nNote: {note.body}\nTags: {note.tags}\n\n"
-        return result
+            table_data.append([
+                colored(note.author.value, 'cyan'),
+                colored(note.title.value, 'green'),
+                colored(note.created_at.strftime('%Y-%m-%d %H:%M:%S'), 'blue'),
+                colored(note.body, 'yellow'),
+                colored(note.tags, 'magenta')
+            ])
+        headers = ["Title", "Author", "Created At", "Note", "Tags"]
+        table = tabulate(table_data, headers=headers, tablefmt="fancy_grid")
+        return f"Found notes for query '{query}':\n" + table
     else:
         return "No notes found with the given query."
 
@@ -425,7 +439,7 @@ def change_note_title():
     else:
         raise KeyError(f"Note '{old_title}' not found")
 
-@input_error   
+@input_error
 def edit_note_text():
     title = input("Please enter a title of the note you want to edit: ").strip()
     note = notebook.get_note(title)
@@ -449,21 +463,25 @@ def remove_note():
         return f"Note '{title}' has been deleted."
     else:
         raise KeyError(f"Note '{title}' not found")
-    
+
 @input_error
 def show_all_notes():
     notes = notebook.data.values()
     if notes:
-        result = "\nAll notes:\n"
+        table_data = []
         for note in notes:
-            result += f"  Title: {note.title.value}\n"
-            result += f"  Author: {note.author.value}\n"
-            result += f"  Created at: {note.created_at.strftime('%Y-%m-%d %H:%M:%S')}\n"
-            result += f"  Note: {note.body}\n"
-            result += f"  Tags: {note.tags}\n\n"
-        return result
+            table_data.append([
+                colored(note.title.value, 'cyan'),
+                colored(note.author.value, 'green'),
+                colored(note.created_at.strftime('%Y-%m-%d %H:%M:%S'), 'blue'),
+                colored(note.body, 'yellow'),
+                colored(note.tags, 'magenta')
+            ])
+        headers = ["Title", "Author", "Created At", "Note", "Tags"]
+        table = tabulate(table_data, headers=headers, tablefmt="fancy_grid")
+        return "\nHere are all the notes saved in the Notebook:\n" + table
     else:
-        return "No notes found in the address book"
+        return "No notes found in the Notebook"
 
 @input_error
 def add_tag():
@@ -481,16 +499,24 @@ def add_tag():
         notebook.add_tags(title, unique_tags)
     return 'Tags added'
 
+@input_error
 def sort_notes_by_tags():
     sorted_notes = notebook.sort_notes_by_tags()
-    result = "\nAll notes sorted by tags alphabetically:\n"
-    for note in sorted_notes:
-        result += f"  Title: {note.title.value}\n"
-        result += f"  Author: {note.author.value}\n"
-        result += f"  Created at: {note.created_at.strftime('%Y-%m-%d %H:%M:%S')}\n"
-        result += f"  Note: {note.body}\n"
-        result += f"  Tags: {note.tags}\n\n"
-    return result
+    if sorted_notes:
+        table_data = []
+        for note in sorted_notes:
+            table_data.append([
+                colored(note.title.value, 'cyan'),
+                colored(note.author.value, 'green'),
+                colored(note.created_at.strftime('%Y-%m-%d %H:%M:%S'), 'blue'),
+                colored(note.body, 'yellow'),
+                colored(note.tags, 'magenta')
+            ])
+        headers = ["Title", "Author", "Created At", "Note", "Tags"]
+        table = tabulate(table_data, headers=headers, tablefmt="fancy_grid")
+        return "\nHere are all the notes sorted by tag in alphabetical order:\n" + table
+    else:
+        return "No notes found in the Notebook"
 
 @input_error
 def find_notes_by_tags():
@@ -498,11 +524,20 @@ def find_notes_by_tags():
     results = notebook.find_notes_by_tags(tags)
     if not results:
         return f"No notes found with the specified tag: {tags}."
-    result = f"\nHere are the notes found by tags '{tags}':\n"
+
+    table_data = []
     for note in results:
-        result += f"\nAuthor: {note.author.value}\nTitle: {note.title.value}\nNote: {note.body}\n"
-    return result
- 
+        table_data.append([
+            colored(note.title.value, 'cyan'),
+            colored(note.author.value, 'green'),
+            colored(note.created_at.strftime('%Y-%m-%d %H:%M:%S'), 'blue'),
+            colored(note.body, 'yellow'),
+            colored(note.tags, 'magenta')
+        ])
+    headers = ["Title", "Author", "Created At", "Note", "Tags"]
+    table = tabulate(table_data, headers=headers, tablefmt="fancy_grid")
+    return f"\nHere are the notes found by tags '{tags}':\n" + table
+
 @input_error
 def remove_tag():
     title = input("Please enter the title from which you want to remove tags: ").strip()
@@ -513,7 +548,7 @@ def remove_tag():
     tags_to_remove_list = tags_to_remove.split(', ')
     updated_tags = [tag for tag in data_tags.split(', ') if tag not in tags_to_remove_list]
     notebook.data[title].tags = ', '.join(updated_tags)
-    return 'Tags have been removed'
+    return f"Tags '{tags_to_remove}' have been removed"
 
 commands = {
     "hello": hello,
@@ -562,7 +597,9 @@ def choice_action(data, commands):
     return unknown_command, None
 
 def main():
+
     filename = input("Please enter the filename to load/create the Personal Organizer: ").strip()
+
     address_book.load_from_disk(filename, notebook)
     print("\nWelcome to Your Personal Assistant!\nType 'help' to see available commands and instructions.")
     session = PromptSession(
